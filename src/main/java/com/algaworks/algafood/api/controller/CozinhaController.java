@@ -5,10 +5,7 @@ import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
 import java.util.List;
@@ -23,6 +20,11 @@ public class CozinhaController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Cozinha> listar() {
         return cozinhaRepository.listar();
+    }
+
+    @GetMapping(path = "/{cozinhaId}")
+    public Cozinha buscar(@PathVariable("cozinhaId") Long id) {
+        return cozinhaRepository.buscar(id);
     }
 
 }

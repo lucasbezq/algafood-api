@@ -32,9 +32,10 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
         return manager.find(Cozinha.class, id);
     }
 
+    @Transactional
     @Override
     public Cozinha salvar(Cozinha cozinha) {
-        return null;
+        return manager.merge(cozinha);
     }
 
     @Transactional

@@ -39,7 +39,7 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
     }
 
     @Transactional
-    public void remover (Cozinha cozinha) {
+    public void remover(Cozinha cozinha) {
         cozinha = buscar(cozinha.getId());
         manager.remove(cozinha);
     }

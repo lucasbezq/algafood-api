@@ -23,8 +23,8 @@ public class CidadeRepositoryImpl implements CidadeRepository {
     }
 
     @Transactional
-    public Cidade adicionar(Cidade Cidade) {
-        return manager.merge(Cidade);
+    public Cidade adicionar(Cidade cidade) {
+        return manager.merge(cidade);
     }
 
     @Override
@@ -32,14 +32,15 @@ public class CidadeRepositoryImpl implements CidadeRepository {
         return manager.find(Cidade.class, id);
     }
 
+    @Transactional
     @Override
-    public Cidade salvar(Cidade Cidade) {
-        return null;
+    public Cidade salvar(Cidade cidade) {
+        return manager.merge(cidade);
     }
 
     @Transactional
-    public void remover (Cidade Cidade) {
-        Cidade = buscar(Cidade.getId());
-        manager.remove(Cidade);
+    public void remover (Cidade cidade) {
+        cidade = buscar(cidade.getId());
+        manager.remove(cidade);
     }
 }

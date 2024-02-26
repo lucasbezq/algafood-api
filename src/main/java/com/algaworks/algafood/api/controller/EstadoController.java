@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Estado;
@@ -59,12 +60,15 @@ public class EstadoController {
     }
 
     @DeleteMapping(path = "/{estadoId}")
-    public ResponseEntity<Estado> remover(@PathVariable Long estadoId) {
+    public ResponseEntity<?> remover(@PathVariable Long estadoId) {
         try {
             cadastroEstadoService.excluir(estadoId);
             return ResponseEntity.noContent().build();
+
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.notFound().build();
+        } catch (EntidadeEmUsoException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 

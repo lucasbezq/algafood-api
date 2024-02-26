@@ -1,9 +1,11 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,11 @@ public class CadastroEstadoService {
         try {
             estadoRepository.remover(estadoId);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de cozinha com o código %d"
+            throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de Estado com o código %d."
                     , estadoId));
+        } catch (DataIntegrityViolationException e) {
+            throw new EntidadeEmUsoException(String.format("Estado de código %d não pode ser removida, pois está " +
+                    "em uso!", estadoId));
         }
     }
 

@@ -18,15 +18,12 @@ public class CadastroRestauranteService {
 
     public Restaurante salvar(Restaurante restaurante) {
         var cozinhaId = restaurante.getCozinha().getId();
-        var cozinha = cozinhaRepository.buscar(cozinhaId);
-
-        if (cozinha == null) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe cadastro de cozinha com codigo: %d", cozinhaId));
-        }
+        var cozinha = cozinhaRepository.findById(cozinhaId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        String.format("Não existe cadastro de cozinha com codigo: %d", cozinhaId)));
 
         restaurante.setCozinha(cozinha);
-        return restauranteRepository.salvar(restaurante);
+        return restauranteRepository.save(restaurante);
     }
 
 

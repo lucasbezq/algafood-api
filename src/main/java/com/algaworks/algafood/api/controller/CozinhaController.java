@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/cozinhas")
@@ -25,18 +26,18 @@ public class CozinhaController {
 
     @GetMapping
     public List<Cozinha> listar() {
-        return cozinhaRepository.listar();
+        return cozinhaRepository.findAll();
     }
 
     @GetMapping(path = "/{cozinhaId}")
     public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long cozinhaId) {
-        var cozinha = cozinhaRepository.buscar(cozinhaId);
+        var cozinha = cozinhaRepository.findById(cozinhaId);
 
-        if (cozinha == null) {
+        if (cozinha.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(cozinha);
+        return ResponseEntity.ok(cozinha.get());
     }
 
     @PostMapping
@@ -47,25 +48,25 @@ public class CozinhaController {
 
     @PutMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
-        var cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
+        var cozinhaAtual = cozinhaRepository.findById(cozinhaId);
 
-        if (cozinhaAtual == null) {
+        if (cozinhaAtual.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-        cozinhaAtual = cadastroCozinhaService.salvar(cozinhaAtual);
-        return ResponseEntity.ok(cozinhaAtual);
+        BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
+        var cozinhaSalva = cadastroCozinhaService.salvar(cozinhaAtual.get());
+        return ResponseEntity.ok(cozinhaSalva);
     }
 
     @DeleteMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId) {
+    public ResponseEntity<?> remover(@PathVariable Long cozinhaId) {
         try {
             cadastroCozinhaService.excluir(cozinhaId);
             return ResponseEntity.noContent().build();
 
         } catch (EntidadeEmUsoException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

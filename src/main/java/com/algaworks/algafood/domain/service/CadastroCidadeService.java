@@ -23,7 +23,7 @@ public class CadastroCidadeService {
         var estadoId = cidade.getEstado().getId();
         var estado = estadoRepository.findById(estadoId);
 
-        if (estado == null) {
+        if (estado.isEmpty()) {
             throw new EntidadeNaoEncontradaException(
                     String.format("Não existe cadastro de Estado com o código: %d.", estadoId));
         }

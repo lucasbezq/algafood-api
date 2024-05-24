@@ -36,8 +36,8 @@ public class CadastroCidadeService {
         try {
             cidadeRepository.deleteById(cidadeId);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de Cidade com o código %d."
-                    , cidadeId));
+            throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de Cidade com o código %d.",
+                    cidadeId));
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format("Cidade de código %d não pode ser removida, pois está " +
                     "em uso!", cidadeId));

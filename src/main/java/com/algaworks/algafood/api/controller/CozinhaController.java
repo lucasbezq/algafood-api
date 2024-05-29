@@ -30,14 +30,8 @@ public class CozinhaController {
     }
 
     @GetMapping(path = "/{cozinhaId}")
-    public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long cozinhaId) {
-        var cozinha = cozinhaRepository.findById(cozinhaId);
-
-        if (cozinha.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(cozinha.get());
+    public Cozinha buscar(@PathVariable("cozinhaId") Long cozinhaId) {
+        return cadastroCozinhaService.buscarCozinha(cozinhaId);
     }
 
     @PostMapping
@@ -47,28 +41,15 @@ public class CozinhaController {
     }
 
     @PutMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
-        var cozinhaAtual = cozinhaRepository.findById(cozinhaId);
-
-        if (cozinhaAtual.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
-        var cozinhaSalva = cadastroCozinhaService.salvar(cozinhaAtual.get());
-        return ResponseEntity.ok(cozinhaSalva);
+    public Cozinha atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+        Cozinha cozinhaAtual = cadastroCozinhaService.buscarCozinha(cozinhaId);
+        BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+        return cadastroCozinhaService.salvar(cozinhaAtual);
     }
 
     @DeleteMapping("/{cozinhaId}")
-    public ResponseEntity<?> remover(@PathVariable Long cozinhaId) {
-        try {
-            cadastroCozinhaService.excluir(cozinhaId);
-            return ResponseEntity.noContent().build();
-
-        } catch (EntidadeEmUsoException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long cozinhaId) {
+        cadastroCozinhaService.excluir(cozinhaId);
     }
 }

@@ -9,6 +9,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import static com.algaworks.algafood.domain.util.Constants.MSG_ESTADO_EM_USO;
+import static com.algaworks.algafood.domain.util.Constants.MSG_NAO_EXISTE_CADASTRO_DE_ESTADO;
+
 @Service
 public class CadastroEstadoService {
 
@@ -23,12 +26,15 @@ public class CadastroEstadoService {
         try {
             estadoRepository.deleteById(estadoId);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de Estado com o código %d."
-                    , estadoId));
+            throw new EntidadeNaoEncontradaException(String.format(MSG_NAO_EXISTE_CADASTRO_DE_ESTADO, estadoId));
         } catch (DataIntegrityViolationException e) {
-            throw new EntidadeEmUsoException(String.format("Estado de código %d não pode ser removida, pois está " +
-                    "em uso!", estadoId));
+            throw new EntidadeEmUsoException(String.format(MSG_ESTADO_EM_USO, estadoId));
         }
+    }
+
+    public Estado buscarEstado(Long id) {
+        return estadoRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_NAO_EXISTE_CADASTRO_DE_ESTADO, id)) );
     }
 
 }

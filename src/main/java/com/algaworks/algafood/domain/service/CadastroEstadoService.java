@@ -9,8 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import static com.algaworks.algafood.domain.util.Constants.MSG_ESTADO_EM_USO;
-import static com.algaworks.algafood.domain.util.Constants.MSG_NAO_EXISTE_CADASTRO_DE_ESTADO;
+import static com.algaworks.algafood.domain.util.Constants.*;
 
 @Service
 public class CadastroEstadoService {
@@ -26,7 +25,7 @@ public class CadastroEstadoService {
         try {
             estadoRepository.deleteById(estadoId);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(String.format(MSG_NAO_EXISTE_CADASTRO_DE_ESTADO, estadoId));
+            throw new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId));
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format(MSG_ESTADO_EM_USO, estadoId));
         }
@@ -34,7 +33,7 @@ public class CadastroEstadoService {
 
     public Estado buscarEstado(Long id) {
         return estadoRepository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_NAO_EXISTE_CADASTRO_DE_ESTADO, id)) );
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, id)) );
     }
 
 }

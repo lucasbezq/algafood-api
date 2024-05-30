@@ -10,25 +10,24 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import static com.algaworks.algafood.domain.util.Constants.MSG_CIDADE_EM_USO;
+import static com.algaworks.algafood.domain.util.Constants.MSG_CIDADE_NAO_ENCONTRADA;
+
 @Service
 public class CadastroCidadeService {
+
 
     @Autowired
     private CidadeRepository cidadeRepository;
 
     @Autowired
-    private EstadoRepository estadoRepository;
+    private CadastroEstadoService cadastroEstadoService;
 
     public Cidade salvar(Cidade cidade) {
         var estadoId = cidade.getEstado().getId();
-        var estado = estadoRepository.findById(estadoId);
+        var estado = cadastroEstadoService.buscarEstado(estadoId);
+        cidade.setEstado(estado);
 
-        if (estado.isEmpty()) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe cadastro de Estado com o código: %d.", estadoId));
-        }
-
-        cidade.setEstado(estado.get());
         return cidadeRepository.save(cidade);
     }
 
@@ -36,11 +35,14 @@ public class CadastroCidadeService {
         try {
             cidadeRepository.deleteById(cidadeId);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de Cidade com o código %d.",
-                    cidadeId));
+            throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId));
         } catch (DataIntegrityViolationException e) {
-            throw new EntidadeEmUsoException(String.format("Cidade de código %d não pode ser removida, pois está " +
-                    "em uso!", cidadeId));
+            throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USO, cidadeId));
         }
+    }
+
+    public Cidade buscarCidade(Long id) {
+        return cidadeRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, id)));
     }
 }

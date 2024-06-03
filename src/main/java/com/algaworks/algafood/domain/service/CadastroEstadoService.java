@@ -26,7 +26,7 @@ public class CadastroEstadoService {
         try {
             estadoRepository.deleteById(estadoId);
         } catch (EmptyResultDataAccessException e) {
-            throw new EstadoNaoEncontradoException(String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId));
+            throw new EstadoNaoEncontradoException(estadoId);
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format(MSG_ESTADO_EM_USO, estadoId));
         }
@@ -34,7 +34,7 @@ public class CadastroEstadoService {
 
     public Estado buscarEstado(Long id) {
         return estadoRepository.findById(id)
-                .orElseThrow(() -> new EstadoNaoEncontradoException(String.format(MSG_ESTADO_NAO_ENCONTRADO, id)) );
+                .orElseThrow(() -> new EstadoNaoEncontradoException(id));
     }
 
 }

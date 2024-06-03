@@ -49,11 +49,11 @@ public class RestauranteController {
 
     @PutMapping(path = "/{restauranteId}")
     public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
-        var restauranteAtual = cadastroRestauranteService.buscarRestaurante(restauranteId);
-        BeanUtils.copyProperties(restaurante, restauranteAtual,
-                "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
-        
         try {
+            var restauranteAtual = cadastroRestauranteService.buscarRestaurante(restauranteId);
+            BeanUtils.copyProperties(restaurante, restauranteAtual,
+                    "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+
             return cadastroRestauranteService.salvar(restauranteAtual);
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());

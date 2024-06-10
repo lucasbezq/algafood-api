@@ -9,27 +9,42 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
-    public ResponseEntity<?> tratarEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e, WebRequest request) {
-        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    public ResponseEntity<?> handleEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e, WebRequest request) {
+        var status = HttpStatus.NOT_FOUND;
+        var errorType = ErrorType.ENTIDADE_NAO_ENCONTRADA;
+        String detail = e.getMessage();
+
+        ApiError error = createProblemBuilder(status, errorType, detail).build();
+
+        return handleExceptionInternal(e, error, new HttpHeaders(), status, request);
     }
 
     @ExceptionHandler(NegocioException.class)
-    public ResponseEntity<?> tratarNegocioException(NegocioException e, WebRequest request) {
-        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    public ResponseEntity<?> handleNegocioException(NegocioException e, WebRequest request) {
+        var status = HttpStatus.BAD_REQUEST;
+        var errorType = ErrorType.ERRO_NEGOCIO;
+        String detail = e.getMessage();
+
+        ApiError error = createProblemBuilder(status, errorType, detail).build();
+
+        return handleExceptionInternal(e, error, new HttpHeaders(), status, request);
     }
 
     @ExceptionHandler(EntidadeEmUsoException.class)
-    public ResponseEntity<?> tratarEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
-        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
+    public ResponseEntity<?> handleEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
+        var status = HttpStatus.CONFLICT;
+        var errorType = ErrorType.ENTIDADE_EM_USO;
+        String detail = e.getMessage();
+
+        ApiError error = createProblemBuilder(status, errorType, detail).build();
+
+        return handleExceptionInternal(e, error, new HttpHeaders(), status, request);
     }
 
     protected ResponseEntity<Object> handleExceptionInternal(Exception e, Object body, HttpHeaders headers,
@@ -37,18 +52,25 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (body == null) {
             body = ApiError.builder()
-                    .dataHora(LocalDateTime.now())
-                    .mensagem(status.getReasonPhrase())
+                    .title(status.getReasonPhrase())
+                    .status(status.value())
                     .build();
         } else if (body instanceof String) {
             body = ApiError.builder()
-                    .dataHora(LocalDateTime.now())
-                    .mensagem(body.toString())
+                    .title(body.toString())
+                    .status(status.value())
                     .build();
         }
 
         return super.handleExceptionInternal(e, body, headers, status, request);
     }
 
+    private ApiError.ApiErrorBuilder createProblemBuilder(HttpStatus status, ErrorType type, String detail) {
+        return ApiError.builder()
+                .status(status.value())
+                .type(type.getUri())
+                .title(type.getTitle())
+                .detail(detail);
+    }
 
 }

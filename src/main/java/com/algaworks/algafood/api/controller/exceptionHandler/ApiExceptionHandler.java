@@ -149,7 +149,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleEntidadeEmUsoException(Exception e, WebRequest request) {
         var status = HttpStatus.INTERNAL_SERVER_ERROR;
-        var errorType = ErrorType.ENTIDADE_EM_USO;
+        var errorType = ErrorType.ERRO_DE_SISTEMA;
         var detail = "Ocorreu um erro interno inesperado no sistema. "
                 + "Tente novamente e se o problema persistir, entre em contato "
                 + "com o administrador do sistema.";

@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.controller.exceptionHandler;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
+import com.algaworks.algafood.domain.util.Constants;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -20,8 +21,12 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.algaworks.algafood.domain.util.Constants.MSG_ERRO_GENERICA;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -119,7 +124,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var errorType = ErrorType.RECURSO_NAO_ENCONTRADO;
         String detail = e.getMessage();
 
-        ApiError error = createProblemBuilder(status, errorType, detail).build();
+        ApiError error = createProblemBuilder(status, errorType, detail).userMessage(detail).build();
 
         return handleExceptionInternal(e, error, new HttpHeaders(), status, request);
     }
@@ -141,7 +146,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var errorType = ErrorType.ENTIDADE_EM_USO;
         String detail = e.getMessage();
 
-        ApiError error = createProblemBuilder(status, errorType, detail).build();
+        ApiError error = createProblemBuilder(status, errorType, detail)
+                .userMessage(MSG_ERRO_GENERICA)
+                .build();
 
         return handleExceptionInternal(e, error, new HttpHeaders(), status, request);
     }
@@ -154,22 +161,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 + "Tente novamente e se o problema persistir, entre em contato "
                 + "com o administrador do sistema.";
 
-        ApiError error = createProblemBuilder(status, errorType, detail).build();
+        ApiError error = createProblemBuilder(status, errorType, detail)
+                .userMessage(detail).build();
 
         return handleExceptionInternal(e, error, new HttpHeaders(), status, request);
     }
 
     protected ResponseEntity<Object> handleExceptionInternal(Exception e, Object body, HttpHeaders headers,
                                                              HttpStatus status, WebRequest request) {
+        var timestamp = LocalDateTime.now();
         if (body == null) {
             body = ApiError.builder()
                     .title(status.getReasonPhrase())
                     .status(status.value())
+                    .timestamp(timestamp)
                     .build();
         } else if (body instanceof String) {
             body = ApiError.builder()
                     .title(body.toString())
                     .status(status.value())
+                    .timestamp(timestamp)
                     .build();
         }
 
@@ -181,7 +192,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(status.value())
                 .type(type.getUri())
                 .title(type.getTitle())
-                .detail(detail);
+                .detail(detail)
+                .timestamp(LocalDateTime.now());
     }
 
     private String joinPath(List<Reference> references) {

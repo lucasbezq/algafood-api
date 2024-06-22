@@ -1,10 +1,8 @@
-package com.algaworks.algafood.api.controller.exceptionHandler;
+package com.algaworks.algafood.api.exceptionHandler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Getter

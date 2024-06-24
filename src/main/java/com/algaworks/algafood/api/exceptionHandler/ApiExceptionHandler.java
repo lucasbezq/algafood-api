@@ -36,8 +36,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var errorType = ErrorType.DADOS_INVALIDOS;
         var detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
 
+        var bindingResult = e.getBindingResult();
+        List<ApiError.Field> fields = bindingResult.getFieldErrors().stream()
+                .map(fieldError -> ApiError.Field.builder()
+                        .name(fieldError.getField())
+                        .userName(fieldError.getDefaultMessage())
+                        .build())
+                .collect(Collectors.toList());
+
         var error = createProblemBuilder(status, errorType, detail)
                 .userMessage(detail)
+                .fields(fields)
                 .build();
 
         return handleExceptionInternal(e, error, headers, status, request);
@@ -55,15 +64,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException e, HttpHeaders headers,
                                                         HttpStatus status, WebRequest request) {
 
-        if (ex instanceof MethodArgumentTypeMismatchException) {
+        if (e instanceof MethodArgumentTypeMismatchException) {
             return handleMethodArgumentTypeMismatch(
-                    (MethodArgumentTypeMismatchException) ex, headers, status, request);
+                    (MethodArgumentTypeMismatchException) e, headers, status, request);
         }
 
-        return super.handleTypeMismatch(ex, headers, status, request);
+        return super.handleTypeMismatch(e, headers, status, request);
     }
 
     private ResponseEntity<Object> handleMethodArgumentTypeMismatch(

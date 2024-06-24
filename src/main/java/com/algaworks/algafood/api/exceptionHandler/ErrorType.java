@@ -13,8 +13,6 @@ public enum ErrorType {
     ERRO_DE_SISTEMA("erro-de-sistema", "Erro de sistema"),
     DADOS_INVALIDOS("dados-invalidos", "Dados inválidos");
 
-
-
     private String title;
     private String uri;
 

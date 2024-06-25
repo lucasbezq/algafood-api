@@ -16,3 +16,4 @@ A AlgaFood API é uma plataforma de entrega de comida, desenvolvida com as tecno
 - Maven 
 - Flyway
 - Lombok
+- Bean Validation

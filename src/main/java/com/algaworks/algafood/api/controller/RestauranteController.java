@@ -52,7 +52,7 @@ public class RestauranteController {
     }
 
     @PutMapping(path = "/{restauranteId}")
-    public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+    public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante) {
         try {
             var restauranteAtual = cadastroRestauranteService.buscarRestaurante(restauranteId);
             BeanUtils.copyProperties(restaurante, restauranteAtual,

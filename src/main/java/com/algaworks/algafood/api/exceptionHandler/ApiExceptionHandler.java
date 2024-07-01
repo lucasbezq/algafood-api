@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,18 +33,27 @@ import static com.algaworks.algafood.domain.util.Constants.MSG_ERRO_GENERICA;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers,
+                                                                  HttpStatus status, WebRequest request) {
 
         var errorType = ErrorType.DADOS_INVALIDOS;
         var detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
 
         var bindingResult = e.getBindingResult();
-        List<ApiError.Field> fields = bindingResult.getFieldErrors().stream()
-                .map(fieldError -> ApiError.Field.builder()
-                        .name(fieldError.getField())
-                        .userName(fieldError.getDefaultMessage())
-                        .build())
+        var fields = bindingResult.getFieldErrors().stream()
+                .map(fieldError -> {
+                    String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+
+                    return ApiError.Field.builder()
+                            .name(fieldError.getField())
+                            .userName(message)
+                            .build();
+
+                })
                 .collect(Collectors.toList());
 
         var error = createProblemBuilder(status, errorType, detail)
@@ -68,8 +80,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                                                         HttpStatus status, WebRequest request) {
 
         if (e instanceof MethodArgumentTypeMismatchException) {
-            return handleMethodArgumentTypeMismatch(
-                    (MethodArgumentTypeMismatchException) e, headers, status, request);
+            return handleMethodArgumentTypeMismatch((MethodArgumentTypeMismatchException) e, headers, status, request);
         }
 
         return super.handleTypeMismatch(e, headers, status, request);

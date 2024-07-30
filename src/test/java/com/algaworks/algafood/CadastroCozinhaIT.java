@@ -1,8 +1,9 @@
-package com.algaworks.algafood.domain.service;
+package com.algaworks.algafood;
 
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 import com.algaworks.algafood.domain.util.Constants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,12 +14,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.validation.ConstraintViolationException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CadastroCozinhaIntegrationTest {
+public class CadastroCozinhaIT {
 
     @Autowired
     private CadastroCozinhaService service;
@@ -52,8 +52,7 @@ public class CadastroCozinhaIntegrationTest {
 
     @Test(expected = CozinhaNaoEncontradaException.class)
     public void deveFalhar_QuandoExcluirCozinhaInexistente() {
-        service.excluir(10L);
+        service.excluir(1000L);
     }
-
 
 }

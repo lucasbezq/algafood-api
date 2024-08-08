@@ -1,4 +1,4 @@
-package com.algaworks.algafood;
+package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
@@ -77,7 +77,7 @@ public class CadastroCozinhaIT {
     @Test
     public void deveRetornarStatus201_QuandoCadastrarCozinhas() {
         RestAssured.given()
-                    .body("{ \"nome\": \"Chinesa\" }")
+                    .body(jsonCadastroCozinhas)
                     .contentType(ContentType.JSON)
                     .accept(ContentType.JSON)
                 .when()

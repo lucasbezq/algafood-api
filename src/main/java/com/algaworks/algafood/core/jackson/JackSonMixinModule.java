@@ -1,8 +1,8 @@
 package com.algaworks.algafood.core.jackson;
 
-import com.algaworks.algafood.api.model.mixin.CidadeMixin;
-import com.algaworks.algafood.api.model.mixin.CozinhaMixin;
-import com.algaworks.algafood.api.model.mixin.RestauranteMixin;
+import com.algaworks.algafood.api.dto.mixin.CidadeMixin;
+import com.algaworks.algafood.api.dto.mixin.CozinhaMixin;
+import com.algaworks.algafood.api.dto.mixin.RestauranteMixin;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;

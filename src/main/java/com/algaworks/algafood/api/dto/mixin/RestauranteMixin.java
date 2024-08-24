@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.model.mixin;
+package com.algaworks.algafood.api.dto.mixin;
 
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Endereco;

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Setter
 public class RestauranteRequest {
 
-    @NotBlank(message = "Nome é obrigatório")
+    @NotBlank
     private String nome;
 
     @NotNull

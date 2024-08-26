@@ -74,10 +74,8 @@ public class RestauranteController {
     @PutMapping(path = "/{restauranteId}")
     public RestauranteDTO atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteRequest restauranteRequest) {
         try {
-            var restaurante = restauranteConverter.toDomain(restauranteRequest);
             var restauranteAtual = cadastroRestauranteService.buscarRestaurante(restauranteId);
-            BeanUtils.copyProperties(restaurante, restauranteAtual,
-                    "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+            restauranteConverter.copyToDomain(restauranteRequest, restauranteAtual);
 
             return restauranteDTOConverter.toDTO(cadastroRestauranteService.salvar(restauranteAtual));
         } catch (CozinhaNaoEncontradaException e) {

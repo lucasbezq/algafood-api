@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.converter;
 
 import com.algaworks.algafood.api.dto.request.RestauranteRequest;
+import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,12 @@ public class RestauranteConverter {
 
     public Restaurante toDomain(RestauranteRequest restauranteRequest) {
         return modelMapper.map(restauranteRequest, Restaurante.class);
+    }
+
+    public void copyToDomain(RestauranteRequest restauranteRequest, Restaurante restaurante) {
+        //evitar HibernateException: identifier of an instance of Cozinha was altered from X to Y
+        restaurante.setCozinha(new Cozinha());
+        modelMapper.map(restauranteRequest, restaurante);
     }
 
 }

@@ -4,10 +4,7 @@ import com.algaworks.algafood.api.converter.RestauranteConverter;
 import com.algaworks.algafood.api.converter.RestauranteDTOConverter;
 import com.algaworks.algafood.api.dto.RestauranteDTO;
 import com.algaworks.algafood.api.dto.request.RestauranteRequest;
-import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
-import com.algaworks.algafood.domain.exception.NegocioException;
-import com.algaworks.algafood.domain.exception.ValidacaoException;
+import com.algaworks.algafood.domain.exception.*;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
@@ -66,7 +63,7 @@ public class RestauranteController {
         try {
             var restaurante = restauranteConverter.toDomain(restauranteRequest);
             return restauranteDTOConverter.toDTO(cadastroRestauranteService.salvar(restaurante));
-        } catch (EntidadeNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }
@@ -78,7 +75,7 @@ public class RestauranteController {
             restauranteConverter.copyToDomain(restauranteRequest, restauranteAtual);
 
             return restauranteDTOConverter.toDTO(cadastroRestauranteService.salvar(restauranteAtual));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }

@@ -24,4 +24,7 @@ public class RestauranteRequest {
     @NotNull
     private CozinhaRefRequest cozinha;
 
+    @Valid
+    @NotNull
+    private EnderecoRequest endereco;
 }

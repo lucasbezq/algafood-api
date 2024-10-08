@@ -14,6 +14,7 @@ public class Constants {
     public static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida, pois está em uso";
     public static final String MSG_FORMA_PAGAMENTO_EM_USO = "Forma de Pagamento de código %d não pode ser removida, pois está em uso";
     public static final String MSG_GRUPO_EM_USO = "Grupo de código %d não pode ser removida, pois está em uso";
+    public static final String MSG_SENHA_INCOMPATIVEL = "A senha informada não coincide com a senha do usuário.";
     public static final String MSG_ERRO_GENERICA = "Ocorreu um erro interno inesperado no sistema. "
             + "Tente novamente e se o problema persistir, entre em contato "
             + "com o administrador do sistema.";

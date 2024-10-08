@@ -1,6 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
+import com.algaworks.algafood.domain.exception.SenhaIncorretaException;
 import com.algaworks.algafood.domain.exception.UsuarioNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.model.Usuario;
@@ -19,6 +20,14 @@ public class CadastroUsuarioService {
     @Transactional
     public Usuario salvar(Usuario usuario) {
         return usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public void alterarSenha(Long id, String senhaAtual, String novaSenha) {
+        var usuarioAtual = buscarUsuario(id);
+
+        if (usuarioAtual.senhaNaoCoincideCom(senhaAtual)) throw new SenhaIncorretaException();
+        usuarioAtual.setSenha(novaSenha);
     }
 
     public Usuario buscarUsuario(Long id) {

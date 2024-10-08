@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.dto.UsuarioDTO;
 import com.algaworks.algafood.api.dto.request.RestauranteRequest;
 import com.algaworks.algafood.api.dto.request.UsuarioAtualizacaoRequest;
 import com.algaworks.algafood.api.dto.request.UsuarioRequest;
+import com.algaworks.algafood.api.dto.request.UsuarioSenhaRequest;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -27,6 +28,10 @@ public class UsuarioConverter {
 
     public void copyToDomain(UsuarioAtualizacaoRequest usuarioAtualizacaoRequest, Usuario usuario) {
         modelMapper.map(usuarioAtualizacaoRequest, usuario);
+    }
+
+    public void copyToDomain(UsuarioSenhaRequest usuarioSenhaRequest, Usuario usuario) {
+        modelMapper.map(usuarioSenhaRequest, usuario);
     }
 
 }

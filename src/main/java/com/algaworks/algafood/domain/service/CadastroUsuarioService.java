@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.SenhaIncorretaException;
 import com.algaworks.algafood.domain.exception.UsuarioNaoEncontradoException;
@@ -16,9 +17,16 @@ public class CadastroUsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
+    
     @Transactional
     public Usuario salvar(Usuario usuario) {
+        usuarioRepository.detach(usuario);
+        var usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+
+        if (usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
+            throw new NegocioException(String.format("Já existe um usuario cadastrado com o e-mail %s", usuario.getEmail()));
+        }
+
         return usuarioRepository.save(usuario);
     }
 

@@ -11,11 +11,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.algaworks.algafood.domain.util.Constants.MSG_ESTADO_EM_USO;
 import static com.algaworks.algafood.domain.util.Constants.MSG_FORMA_PAGAMENTO_EM_USO;
 
 @Service
-public class CadastroFormaPagamento {
+public class CadastroFormaPagamentoService {
 
     @Autowired
     private FormaPagamentoRepository formaPagamentoRepository;

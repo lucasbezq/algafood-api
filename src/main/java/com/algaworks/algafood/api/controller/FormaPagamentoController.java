@@ -5,7 +5,7 @@ import com.algaworks.algafood.api.converter.FormaPagamentoDTOConverter;
 import com.algaworks.algafood.api.dto.FormaPagamentoDTO;
 import com.algaworks.algafood.api.dto.request.FormaPagamentoRequest;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
-import com.algaworks.algafood.domain.service.CadastroFormaPagamento;
+import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class FormaPagamentoController {
     private FormaPagamentoRepository formaPagamentoRepository;
 
     @Autowired
-    private CadastroFormaPagamento cadastroFormaPagamento;
+    private CadastroFormaPagamentoService cadastroFormaPagamentoService;
 
     @Autowired
     private FormaPagamentoDTOConverter formaPagamentoDTOConverter;
@@ -37,28 +37,28 @@ public class FormaPagamentoController {
 
     @GetMapping("/{formaPagamentoId}")
     public FormaPagamentoDTO buscar(@PathVariable Long formaPagamentoId) {
-        var formaPagamento = cadastroFormaPagamento.buscarFormaPagamento(formaPagamentoId);
+        var formaPagamento = cadastroFormaPagamentoService.buscarFormaPagamento(formaPagamentoId);
         return formaPagamentoDTOConverter.toDTO(formaPagamento);
     }
 
     @PostMapping
     public FormaPagamentoDTO adicionar(@RequestBody @Valid FormaPagamentoRequest formaPagamentoRequest) {
         var formaPagamento = formaPagamentoConverter.toDomain(formaPagamentoRequest);
-        return formaPagamentoDTOConverter.toDTO(cadastroFormaPagamento.salvar(formaPagamento));
+        return formaPagamentoDTOConverter.toDTO(cadastroFormaPagamentoService.salvar(formaPagamento));
     }
 
     @PutMapping("/{formaPagamentoId}")
     public FormaPagamentoDTO atualizar(@PathVariable Long formaPagamentoId,
                                        @RequestBody @Valid FormaPagamentoRequest formaPagamentoRequest) {
-        var formaPagamentoAtual = cadastroFormaPagamento.buscarFormaPagamento(formaPagamentoId);
+        var formaPagamentoAtual = cadastroFormaPagamentoService.buscarFormaPagamento(formaPagamentoId);
         formaPagamentoConverter.copyToDomain(formaPagamentoRequest, formaPagamentoAtual);
-        return formaPagamentoDTOConverter.toDTO(cadastroFormaPagamento.salvar(formaPagamentoAtual));
+        return formaPagamentoDTOConverter.toDTO(cadastroFormaPagamentoService.salvar(formaPagamentoAtual));
     }
 
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     private void excluir(@PathVariable Long formaPagamentoId) {
-        cadastroFormaPagamento.excluir(formaPagamentoId);
+        cadastroFormaPagamentoService.excluir(formaPagamentoId);
     }
 
 

@@ -40,7 +40,7 @@ public class RestauranteController {
         return restauranteDTOConverter.toCollectionDTO(restaurantes);
     }
 
-    @GetMapping(path = "/{restauranteId}")
+    @GetMapping("/{restauranteId}")
     public RestauranteDTO buscar(@PathVariable("restauranteId") Long restauranteId) {
         return restauranteDTOConverter.toDTO(cadastroRestauranteService.buscarRestaurante(restauranteId));
     }
@@ -56,7 +56,7 @@ public class RestauranteController {
         }
     }
 
-    @PutMapping(path = "/{restauranteId}")
+    @PutMapping("/{restauranteId}")
     public RestauranteDTO atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteRequest restauranteRequest) {
         try {
             var restauranteAtual = cadastroRestauranteService.buscarRestaurante(restauranteId);

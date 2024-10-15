@@ -5,7 +5,7 @@ import com.algaworks.algafood.api.converter.GrupoDTOConverter;
 import com.algaworks.algafood.api.dto.GrupoDTO;
 import com.algaworks.algafood.api.dto.request.GrupoRequest;
 import com.algaworks.algafood.domain.repository.GrupoRepository;
-import com.algaworks.algafood.domain.service.CadastrarGrupoService;
+import com.algaworks.algafood.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class GrupoController {
     private GrupoRepository grupoRepository;
 
     @Autowired
-    private CadastrarGrupoService cadastrarGrupoService;
+    private CadastroGrupoService cadastroGrupoService;
 
     @Autowired
     private GrupoDTOConverter grupoDTOConverter;
@@ -37,25 +37,25 @@ public class GrupoController {
 
     @GetMapping("/{grupoId}")
     public GrupoDTO buscar(@PathVariable("grupoId") Long grupoId) {
-        return grupoDTOConverter.toDTO(cadastrarGrupoService.buscarGrupo(grupoId));
+        return grupoDTOConverter.toDTO(cadastroGrupoService.buscarGrupo(grupoId));
     }
 
     @PostMapping
     public GrupoDTO adicionar(@RequestBody @Valid GrupoRequest grupoRequest) {
         var grupo = grupoConverter.toDomain(grupoRequest);
-        return grupoDTOConverter.toDTO(cadastrarGrupoService.salvar(grupo));
+        return grupoDTOConverter.toDTO(cadastroGrupoService.salvar(grupo));
     }
 
     @PutMapping("/{grupoId}")
     public GrupoDTO atualizar(@PathVariable("grupoId") Long grupoId, @RequestBody @Valid GrupoRequest grupoRequest) {
-        var grupoAtual = cadastrarGrupoService.buscarGrupo(grupoId);
+        var grupoAtual = cadastroGrupoService.buscarGrupo(grupoId);
         grupoConverter.copyToDomain(grupoRequest, grupoAtual);
-        return grupoDTOConverter.toDTO(cadastrarGrupoService.salvar(grupoAtual));
+        return grupoDTOConverter.toDTO(cadastroGrupoService.salvar(grupoAtual));
     }
 
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable("grupoId") Long grupoId) {
-        cadastrarGrupoService.excluir(grupoId);
+        cadastroGrupoService.excluir(grupoId);
     }
 }

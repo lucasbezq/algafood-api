@@ -20,7 +20,7 @@ public class GrupoDTOConverter {
         return modelMapper.map(grupo, GrupoDTO.class);
     }
 
-    public List<GrupoDTO> toCollectionDTO(List<Grupo> grupos) {
+    public List<GrupoDTO> toCollectionDTO(Collection<Grupo> grupos) {
         return grupos.stream()
                 .map(grupo -> toDTO(grupo))
                 .collect(Collectors.toList());

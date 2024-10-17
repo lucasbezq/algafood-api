@@ -1,12 +1,9 @@
 package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.domain.exception.NegocioException;
-import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.SenhaIncorretaException;
 import com.algaworks.algafood.domain.exception.UsuarioNaoEncontradoException;
-import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.model.Usuario;
-import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +14,9 @@ public class CadastroUsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CadastroGrupoService cadastroGrupoService;
     
     @Transactional
     public Usuario salvar(Usuario usuario) {
@@ -36,6 +36,22 @@ public class CadastroUsuarioService {
 
         if (usuarioAtual.senhaNaoCoincideCom(senhaAtual)) throw new SenhaIncorretaException();
         usuarioAtual.setSenha(novaSenha);
+    }
+
+    @Transactional
+    public void associarAoGrupo(Long usuarioId, Long grupoId) {
+        var usuario = buscarUsuario(usuarioId);
+        var grupo = cadastroGrupoService.buscarGrupo(grupoId);
+
+        usuario.associar(grupo);
+    }
+
+    @Transactional
+    public void desassociarAoGrupo(Long usuarioId, Long grupoId) {
+        var usuario = buscarUsuario(usuarioId);
+        var grupo = cadastroGrupoService.buscarGrupo(grupoId);
+
+        usuario.desassociar(grupo);
     }
 
     public Usuario buscarUsuario(Long id) {

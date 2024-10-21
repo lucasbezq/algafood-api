@@ -74,10 +74,29 @@ public class RestauranteController {
         cadastroRestauranteService.ativar(restauranteId);
     }
 
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarRestaurantes(@RequestBody List<Long> restauranteIds) {
+        try {
+            cadastroRestauranteService.ativar(restauranteIds);
+        } catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e.getCause());
+        }    }
+
     @DeleteMapping("/{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable Long restauranteId) {
         cadastroRestauranteService.inativar(restauranteId);
+    }
+
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void iativarRestaurantes(@RequestBody List<Long> restauranteIds) {
+        try {
+            cadastroRestauranteService.inativar(restauranteIds);
+        } catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e.getCause());
+        }
     }
 
     @PutMapping("/{restauranteId}/abertura")

@@ -31,5 +31,9 @@ public class ItemPedido {
     @JoinColumn(nullable = false)
     private Pedido pedido;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Produto produto;
+
 }
 

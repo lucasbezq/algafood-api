@@ -21,13 +21,12 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private BigDecimal taxaFrete;
-
-    @Column(nullable = false)
     private BigDecimal valorTotal;
+    private BigDecimal subtotal;
 
-    private StatusPedido status;
+    @Enumerated(EnumType.STRING)
+    private StatusPedido status = StatusPedido.CRIADO;
 
     @Embedded
     private Endereco enderecoEntrega;
@@ -43,13 +42,31 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itens = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Restaurante restaurante;
+
     @Column(nullable = false)
     @CreationTimestamp
     private OffsetDateTime dataCriacao;
 
     private OffsetDateTime dataConfirmacao;
-
     private OffsetDateTime dataEntrega;
-
     private OffsetDateTime dataCancelamento;
+
+    public void calcularValorTotal() {
+        this.subtotal = getItens().stream()
+                .map(item -> item.getPrecoTotal())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.valorTotal = this.subtotal.add(this.taxaFrete);
+    }
+
+    public void definirFrete() {
+        setTaxaFrete(getRestaurante().getTaxaFrete());
+    }
+
+    public void atribuirPedidoAosItens() {
+        getItens().forEach(item -> item.setPedido(this));
+    }
 }

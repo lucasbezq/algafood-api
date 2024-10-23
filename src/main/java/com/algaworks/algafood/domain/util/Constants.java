@@ -12,6 +12,7 @@ public class Constants {
             " cadastrado no Restaurante de código %d";
     public static final String MSG_USUARIO_NAO_ENCONTRADO = "Não existe um cadastro de Usuário com o código %d.";
     public static final String MSG_PERMISSAO_NAO_ENCONTRADO = "Não existe um cadastro de Permissão com o código %d.";
+    public static final String MSG_PEDIDO_NAO_ENCONTRADO = "Não existe um cadastro de Pedido com o código %d.";
     public static final String MSG_COZINHA_EM_USO = "Cozinha de código %d não pode ser removida, pois está em uso";
     public static final String MSG_ESTADO_EM_USO = "Estado de código %d não pode ser removida, pois está em uso";
     public static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida, pois está em uso";

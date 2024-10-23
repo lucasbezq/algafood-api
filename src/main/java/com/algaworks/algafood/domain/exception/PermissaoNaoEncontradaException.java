@@ -1,7 +1,5 @@
 package com.algaworks.algafood.domain.exception;
 
-import com.algaworks.algafood.domain.util.Constants;
-
 import static com.algaworks.algafood.domain.util.Constants.MSG_PERMISSAO_NAO_ENCONTRADO;
 
 public class PermissaoNaoEncontradaException extends EntidadeNaoEncontradaException {

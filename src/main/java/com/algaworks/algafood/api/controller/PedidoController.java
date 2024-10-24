@@ -1,8 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.converter.PedidoDTOConverter;
+import com.algaworks.algafood.api.converter.PedidoResumoDTOConverter;
 import com.algaworks.algafood.api.dto.PedidoDTO;
-import com.algaworks.algafood.domain.model.Pedido;
+import com.algaworks.algafood.api.dto.PedidoResumoDTO;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.service.CadastroPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pedidos")
-public class PedidoCotroller {
+public class PedidoController {
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -26,10 +27,13 @@ public class PedidoCotroller {
     @Autowired
     private CadastroPedidoService cadastroPedidoService;
 
+    @Autowired
+    private PedidoResumoDTOConverter pedidoResumoDTOConverter;
+
     @GetMapping
-    public List<PedidoDTO> listar() {
+    public List<PedidoResumoDTO> listar() {
         var pedidos = pedidoRepository.findAll();
-        return pedidoDTOConverter.toCollectionDTO(pedidos);
+        return pedidoResumoDTOConverter.toCollectionDTO(pedidos);
     }
 
     @GetMapping("/{pedidoId}")

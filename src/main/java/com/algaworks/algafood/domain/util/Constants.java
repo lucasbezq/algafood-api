@@ -10,6 +10,8 @@ public class Constants {
     public static final String MSG_GRUPO_NAO_ENCONTRADO = "Não existe um cadastro de Grupo com o código %d.";
     public static final String MSG_PRODUTO_NAO_ENCONTRADO_NO_RESTAURANTE = "Não existe um cadastro de Produto com o código %d" +
             " cadastrado no Restaurante de código %d";
+    public static final String MSG_FORMA_PAGAMENTO_NAO_ENCONTRADA_NO_RESTAURANTE = "Não existe um cadastro de Forma de Pagamento " +
+            "com o código %d cadastrado no Restaurante de código %d";
     public static final String MSG_USUARIO_NAO_ENCONTRADO = "Não existe um cadastro de Usuário com o código %d.";
     public static final String MSG_PERMISSAO_NAO_ENCONTRADO = "Não existe um cadastro de Permissão com o código %d.";
     public static final String MSG_PEDIDO_NAO_ENCONTRADO = "Não existe um cadastro de Pedido com o código %d.";

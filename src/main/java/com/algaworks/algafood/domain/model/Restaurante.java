@@ -102,4 +102,5 @@ public class Restaurante {
     public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
         return !aceitaFormaPagamento(formaPagamento);
     }
+
 }

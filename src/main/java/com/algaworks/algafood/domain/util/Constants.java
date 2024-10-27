@@ -24,5 +24,6 @@ public class Constants {
     public static final String MSG_ERRO_GENERICA = "Ocorreu um erro interno inesperado no sistema. "
             + "Tente novamente e se o problema persistir, entre em contato "
             + "com o administrador do sistema.";
+    public static final String MSG_ALTERACAO_PEDIDO_NEGADA = "O status do pedido %d não pode ser alterado de %s para %s.";
 
 }

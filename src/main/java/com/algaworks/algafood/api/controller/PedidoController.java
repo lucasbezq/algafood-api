@@ -10,7 +10,7 @@ import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
-import com.algaworks.algafood.domain.service.CadastroPedidoService;
+import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ public class PedidoController {
     private PedidoDTOConverter pedidoDTOConverter;
 
     @Autowired
-    private CadastroPedidoService cadastroPedidoService;
+    private EmissaoPedidoService emissaoPedidoService;
 
     @Autowired
     private PedidoResumoDTOConverter pedidoResumoDTOConverter;
@@ -44,7 +44,7 @@ public class PedidoController {
 
     @GetMapping("/{pedidoId}")
     public PedidoDTO buscar(@PathVariable Long pedidoId) {
-        var pedido = cadastroPedidoService.buscarPedido(pedidoId);
+        var pedido = emissaoPedidoService.buscarPedido(pedidoId);
         return pedidoDTOConverter.toDTO(pedido);
     }
 
@@ -57,7 +57,7 @@ public class PedidoController {
             novoPedido.setCliente(new Usuario());
             novoPedido.getCliente().setId(1L);
 
-            novoPedido = cadastroPedidoService.emitir(novoPedido);
+            novoPedido = emissaoPedidoService.emitir(novoPedido);
             return pedidoDTOConverter.toDTO(novoPedido);
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);

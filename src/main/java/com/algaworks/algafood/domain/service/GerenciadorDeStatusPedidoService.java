@@ -11,20 +11,20 @@ public class GerenciadorDeStatusPedidoService {
     private EmissaoPedidoService emissaoPedidoService;
 
     @Transactional
-    public void confirmar(Long pedidoId) {
-        var pedido = emissaoPedidoService.buscarPedido(pedidoId);
+    public void confirmar(String codigoPedido) {
+        var pedido = emissaoPedidoService.buscarPedido(codigoPedido);
         pedido.confirmar();
     }
 
     @Transactional
-    public void entregar(Long pedidoId) {
-        var pedido = emissaoPedidoService.buscarPedido(pedidoId);
+    public void entregar(String codigoPedido) {
+        var pedido = emissaoPedidoService.buscarPedido(codigoPedido);
         pedido.entregar();
     }
 
     @Transactional
-    public void cancelar(Long pedidoId) {
-        var pedido = emissaoPedidoService.buscarPedido(pedidoId);
+    public void cancelar(String codigoPedido) {
+        var pedido = emissaoPedidoService.buscarPedido(codigoPedido);
         pedido.cancelar();
     }
 }

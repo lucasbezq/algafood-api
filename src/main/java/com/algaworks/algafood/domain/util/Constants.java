@@ -14,7 +14,7 @@ public class Constants {
             "com o código %d cadastrado no Restaurante de código %d";
     public static final String MSG_USUARIO_NAO_ENCONTRADO = "Não existe um cadastro de Usuário com o código %d.";
     public static final String MSG_PERMISSAO_NAO_ENCONTRADO = "Não existe um cadastro de Permissão com o código %d.";
-    public static final String MSG_PEDIDO_NAO_ENCONTRADO = "Não existe um cadastro de Pedido com o código %d.";
+    public static final String MSG_PEDIDO_NAO_ENCONTRADO = "Não existe um cadastro de Pedido com o código %s.";
     public static final String MSG_COZINHA_EM_USO = "Cozinha de código %d não pode ser removida, pois está em uso";
     public static final String MSG_ESTADO_EM_USO = "Estado de código %d não pode ser removida, pois está em uso";
     public static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida, pois está em uso";
@@ -24,6 +24,6 @@ public class Constants {
     public static final String MSG_ERRO_GENERICA = "Ocorreu um erro interno inesperado no sistema. "
             + "Tente novamente e se o problema persistir, entre em contato "
             + "com o administrador do sistema.";
-    public static final String MSG_ALTERACAO_PEDIDO_NEGADA = "O status do pedido %d não pode ser alterado de %s para %s.";
+    public static final String MSG_ALTERACAO_PEDIDO_NEGADA = "O status do pedido %s não pode ser alterado de %s para %s.";
 
 }

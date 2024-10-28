@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.algaworks.algafood.domain.util.Constants.MSG_ALTERACAO_PEDIDO_NEGADA;
 
@@ -23,6 +24,8 @@ public class Pedido {
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String codigo;
 
     private BigDecimal taxaFrete;
     private BigDecimal valorTotal;
@@ -93,10 +96,15 @@ public class Pedido {
     private void setStatus(StatusPedido novoStatus) {
         if (getStatus().naoPodeAlterarPara(novoStatus)) {
             throw new NegocioException(String.format(MSG_ALTERACAO_PEDIDO_NEGADA,
-                    getId(), getStatus().getDescricao(), novoStatus));
+                    getCodigo(), getStatus().getDescricao(), novoStatus.getDescricao()));
         }
 
         this.status = novoStatus;
+    }
+
+    @PrePersist
+    private void gerarCodigo() {
+        setCodigo(UUID.randomUUID().toString());
     }
 
 }

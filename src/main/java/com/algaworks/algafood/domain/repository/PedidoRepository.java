@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
+
+    Optional<Pedido> findByCodigo(String codigo);
 
     @Query("FROM Pedido p JOIN FETCH p.cliente JOIN FETCH p.restaurante")
     List<Pedido> findAll();

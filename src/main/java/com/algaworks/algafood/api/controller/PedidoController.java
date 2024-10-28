@@ -42,9 +42,9 @@ public class PedidoController {
         return pedidoResumoDTOConverter.toCollectionDTO(pedidos);
     }
 
-    @GetMapping("/{pedidoId}")
-    public PedidoDTO buscar(@PathVariable Long pedidoId) {
-        var pedido = emissaoPedidoService.buscarPedido(pedidoId);
+    @GetMapping("/{codigoPedido}")
+    public PedidoDTO buscar(@PathVariable String codigoPedido) {
+        var pedido = emissaoPedidoService.buscarPedido(codigoPedido);
         return pedidoDTOConverter.toDTO(pedido);
     }
 

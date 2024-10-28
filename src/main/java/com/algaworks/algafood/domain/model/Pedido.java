@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.model;
 
+import com.algaworks.algafood.domain.exception.NegocioException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,6 +11,8 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.algaworks.algafood.domain.util.Constants.MSG_ALTERACAO_PEDIDO_NEGADA;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -71,4 +74,29 @@ public class Pedido {
     public void atribuirPedidoAosItens() {
         getItens().forEach(item -> item.setPedido(this));
     }
+
+    public void confirmar() {
+        setStatus(StatusPedido.CONFIRMADO);
+        setDataConfirmacao(OffsetDateTime.now());
+    }
+
+    public void entregar() {
+        setStatus(StatusPedido.ENTREGUE);
+        setDataEntrega(OffsetDateTime.now());
+    }
+
+    public void cancelar() {
+        setStatus(StatusPedido.CANCELADO);
+        setDataCancelamento(OffsetDateTime.now());
+    }
+
+    private void setStatus(StatusPedido novoStatus) {
+        if (getStatus().naoPodeAlterarPara(novoStatus)) {
+            throw new NegocioException(String.format(MSG_ALTERACAO_PEDIDO_NEGADA,
+                    getId(), getStatus().getDescricao(), novoStatus));
+        }
+
+        this.status = novoStatus;
+    }
+
 }

@@ -15,7 +15,6 @@ import static com.algaworks.algafood.domain.util.Constants.MSG_CIDADE_EM_USO;
 @Service
 public class CadastroCidadeService {
 
-
     @Autowired
     private CidadeRepository cidadeRepository;
 

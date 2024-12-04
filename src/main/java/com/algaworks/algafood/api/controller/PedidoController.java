@@ -6,6 +6,7 @@ import com.algaworks.algafood.api.converter.PedidoResumoDTOConverter;
 import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.api.dto.PedidoResumoDTO;
 import com.algaworks.algafood.api.dto.request.PedidoRequest;
+import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Usuario;
@@ -21,7 +22,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -44,8 +45,9 @@ public class PedidoController {
 
     @GetMapping
     public Page<PedidoResumoDTO> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
+        pageable = convertPageable(pageable);
         var pedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
-        var pedidosResumoDTO =  pedidoResumoDTOConverter.toCollectionDTO(pedidos.getContent());
+        var pedidosResumoDTO = pedidoResumoDTOConverter.toCollectionDTO(pedidos.getContent());
         var pedidosResumoDTOPage = new PageImpl<>(pedidosResumoDTO, pageable, pedidos.getTotalElements());
 
         return pedidosResumoDTOPage;
@@ -71,6 +73,17 @@ public class PedidoController {
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
         }
+    }
+
+    private Pageable convertPageable(Pageable apiPageable) {
+        var map = Map.of(
+                "codigo", "codigo",
+                "restaurante.nome", "restaurante.nome",
+                "valorTotal", "valorTotal",
+                "nomeCliente", "cliente.nome"
+        );
+
+        return PageableTranslator.translate(apiPageable, map);
     }
 
 }

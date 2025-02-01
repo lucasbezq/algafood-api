@@ -64,7 +64,7 @@ public class ProdutoController {
     @PutMapping(path = "/{produtoId}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void atualizarFoto(@PathVariable Long restauranteId,
                               @PathVariable Long produtoId,
-                              FotoProdutoRequest request) {
+                              @Valid FotoProdutoRequest request) {
 
         var nomeArquivo = UUID.randomUUID().toString()
                 .concat("_")

@@ -1,6 +1,5 @@
 package com.algaworks.algafood.core.validation;
 
-import org.springframework.http.MediaType;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

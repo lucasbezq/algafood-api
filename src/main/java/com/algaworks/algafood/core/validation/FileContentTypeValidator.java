@@ -1,7 +1,5 @@
 package com.algaworks.algafood.core.validation;
 
-import org.springframework.http.MediaType;
-import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;

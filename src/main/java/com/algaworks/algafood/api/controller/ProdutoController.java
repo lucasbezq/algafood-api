@@ -74,6 +74,7 @@ public class ProdutoController {
     @PutMapping(path = "/{produtoId}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
                                         @Valid FotoProdutoRequest request) {
+        //TODO: Mover para um converter
         var produto = cadastroProdutoService.buscarProduto(produtoId, restauranteId);
         var arquivo = request.getArquivo();
 

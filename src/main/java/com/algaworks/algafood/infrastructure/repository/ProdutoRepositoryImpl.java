@@ -33,4 +33,10 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryQueries {
     public FotoProduto save(FotoProduto foto) {
         return entityManager.merge(foto);
     }
+
+    @Transactional
+    @Override
+    public void delete(FotoProduto foto) {
+        entityManager.remove(foto);
+    }
 }

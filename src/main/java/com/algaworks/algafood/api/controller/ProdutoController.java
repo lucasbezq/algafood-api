@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
@@ -73,7 +74,7 @@ public class ProdutoController {
 
     @PutMapping(path = "/{produtoId}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
-                                        @Valid FotoProdutoRequest request) {
+                                        @Valid FotoProdutoRequest request) throws IOException {
         //TODO: Mover para um converter
         var produto = cadastroProdutoService.buscarProduto(produtoId, restauranteId);
         var arquivo = request.getArquivo();
@@ -85,7 +86,7 @@ public class ProdutoController {
         foto.setTamanho(arquivo.getSize());
         foto.setNomeArquivo(arquivo.getOriginalFilename());
 
-        var fotoSalva = catalogoFotoProdutoService.salvar(foto);
+        var fotoSalva = catalogoFotoProdutoService.salvar(foto, arquivo.getInputStream());
         return fotoProdutoDTOConverter.toDTO(fotoSalva);
     }
 

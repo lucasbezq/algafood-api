@@ -90,4 +90,10 @@ public class ProdutoController {
         return fotoProdutoDTOConverter.toDTO(fotoSalva);
     }
 
+    @GetMapping(path = "/{produtoId}/foto")
+    public FotoProdutoDTO buscarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+        var foto = catalogoFotoProdutoService.buscarFoto(restauranteId, produtoId);
+        return fotoProdutoDTOConverter.toDTO(foto);
+    }
+
 }

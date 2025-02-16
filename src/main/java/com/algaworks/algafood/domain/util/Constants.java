@@ -26,6 +26,9 @@ public class Constants {
             + "com o administrador do sistema.";
     public static final String MSG_ALTERACAO_PEDIDO_NEGADA = "O status do pedido %s não pode ser alterado de %s para %s.";
     public static final String MSG_ERRO_RELATORIO_VENDAS_DIARIAS = "Não foi possível emitir relatório de vendas diárias.";
+    public static final String MSG_FOTO_PRODUTO_NAO_ENCONTRADO = "Não existe uma foto cadastrada para o Produto com o código %d " +
+            "do Restaurante de código %d.";
+
 
     public static final String RELATORIO_VENDAS_DIARIAS_JASPER_PATH = "/relatorios/vendas-diarias.jasper";
 

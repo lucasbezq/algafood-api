@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -31,6 +33,16 @@ public class LocalFotoStorageService implements FotoStorageService {
             Files.deleteIfExists(arquivoPath);
         } catch (Exception e) {
             throw new StorageException("Não foi possível excluir arquivo.");
+        }
+    }
+
+    @Override
+    public InputStream recuperar(String nomeArquivo) {
+        try {
+            var arquivoPath = getArquivoPath(nomeArquivo);
+            return Files.newInputStream(arquivoPath);
+        } catch (Exception e) {
+            throw new StorageException("Não foi possível recuperar o arquivo.");
         }
     }
 

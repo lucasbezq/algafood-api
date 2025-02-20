@@ -18,6 +18,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -83,10 +84,10 @@ public class ProdutoController {
     @PutMapping(path = "/{produtoId}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
                                         @Valid FotoProdutoRequest request) throws IOException {
-        //TODO: Mover para um converter
         var produto = cadastroProdutoService.buscarProduto(produtoId, restauranteId);
         var arquivo = request.getArquivo();
-
+        
+        //TODO: Mover para um converter
         var foto = new FotoProduto();
         foto.setProduto(produto);
         foto.setDescricao(request.getDescricao());
@@ -104,17 +105,32 @@ public class ProdutoController {
         return fotoProdutoDTOConverter.toDTO(foto);
     }
 
-    @GetMapping(path = "/{produtoId}/foto", produces =  MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<InputStreamResource> servirFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+    @GetMapping(path = "/{produtoId}/foto")
+    public ResponseEntity<InputStreamResource> servirFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
+                                                          @RequestHeader("accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
             var foto = catalogoFotoProdutoService.buscarFoto(restauranteId, produtoId);
+
+            var mediaTypeFoto = MediaType.parseMediaType(foto.getContentType());
+            var acceptMediaTypes = MediaType.parseMediaTypes(acceptHeader);
+
+            verificarCompatibilidadeMediaType(mediaTypeFoto, acceptMediaTypes);
+
             var inputStream = fotoStorageService.recuperar(foto.getNomeArquivo());
 
             return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG)
+                    .contentType(mediaTypeFoto)
                     .body(new InputStreamResource(inputStream));
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    private void verificarCompatibilidadeMediaType(MediaType mediaTypeFoto, List<MediaType> acceptMediaTypes)
+            throws HttpMediaTypeNotAcceptableException {
+        var isCompativel = acceptMediaTypes.stream()
+                .anyMatch(mediaType -> mediaType.isCompatibleWith(mediaTypeFoto));
+
+        if (!isCompativel) throw new HttpMediaTypeNotAcceptableException(acceptMediaTypes);
     }
 }

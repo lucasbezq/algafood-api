@@ -127,10 +127,10 @@ public class ProdutoController {
     }
 
     @DeleteMapping(path = "/{produtoId}/foto")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         catalogoFotoProdutoService.removerFoto(restauranteId, produtoId);
     }
-
 
     private void verificarCompatibilidadeMediaType(MediaType mediaTypeFoto, List<MediaType> acceptMediaTypes)
             throws HttpMediaTypeNotAcceptableException {

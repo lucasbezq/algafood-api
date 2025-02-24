@@ -5,6 +5,7 @@ import com.algaworks.algafood.domain.service.FotoStorageService;
 import com.algaworks.algafood.infrastructure.service.storage.StorageException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
@@ -51,7 +52,16 @@ public class S3StorageService implements FotoStorageService {
 
     @Override
     public void remover(String nomeArquivoAntigo) {
+        try {
+            var request = new DeleteObjectRequest(
+                    storageProperties.getS3().getBucket(),
+                    getPath(nomeArquivoAntigo)
+            );
 
+            s3.deleteObject(request);
+        } catch (Exception e) {
+            throw new StorageException("Não foi possível excluir arquivo na Amazon S3.", e);
+        }
     }
 
     @Override

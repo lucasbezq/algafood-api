@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-//Service
 public class LocalFotoStorageService implements FotoStorageService {
 
     @Autowired

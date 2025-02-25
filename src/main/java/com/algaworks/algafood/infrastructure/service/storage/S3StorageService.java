@@ -1,18 +1,16 @@
-package com.algaworks.algafood.core.storage;
+package com.algaworks.algafood.infrastructure.service.storage;
 
 
+import com.algaworks.algafood.core.storage.StorageProperties;
 import com.algaworks.algafood.domain.service.FotoStorageService;
-import com.algaworks.algafood.infrastructure.service.storage.StorageException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 @Service
@@ -46,10 +44,6 @@ public class S3StorageService implements FotoStorageService {
         }
     }
 
-    private String getPath(String nomeArquivo) {
-        return String.format("%s/%s", storageProperties.getS3().getDirectory(), nomeArquivo);
-    }
-
     @Override
     public void remover(String nomeArquivoAntigo) {
         try {
@@ -65,8 +59,17 @@ public class S3StorageService implements FotoStorageService {
     }
 
     @Override
-    public InputStream recuperar(String nomeArquivo) {
-        return null;
+    public FotoRecuperada recuperar(String nomeArquivo) {
+        var path = getPath(nomeArquivo);
+        var url = s3.getUrl(storageProperties.getS3().getBucket(), path);
+
+        return FotoRecuperada.builder()
+                .url(url.toString())
+                .build();
+    }
+
+    private String getPath(String nomeArquivo) {
+        return String.format("%s/%s", storageProperties.getS3().getDirectory(), nomeArquivo);
     }
 
 }

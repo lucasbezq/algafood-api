@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-//@Service
+//Service
 public class LocalFotoStorageService implements FotoStorageService {
 
     @Autowired
@@ -39,10 +39,13 @@ public class LocalFotoStorageService implements FotoStorageService {
     }
 
     @Override
-    public InputStream recuperar(String nomeArquivo) {
+    public FotoRecuperada recuperar(String nomeArquivo) {
         try {
             var arquivoPath = getArquivoPath(nomeArquivo);
-            return Files.newInputStream(arquivoPath);
+            var fotoRecuperada = FotoRecuperada.builder()
+                    .inputStream(Files.newInputStream(arquivoPath))
+                    .build();
+            return fotoRecuperada;
         } catch (Exception e) {
             throw new StorageException("Não foi possível recuperar o arquivo.");
         }

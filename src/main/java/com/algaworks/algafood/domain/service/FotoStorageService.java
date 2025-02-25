@@ -2,7 +2,6 @@ package com.algaworks.algafood.domain.service;
 
 import lombok.Builder;
 import lombok.Getter;
-
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -10,7 +9,7 @@ public interface FotoStorageService {
 
     void armazenar(NovaFoto novaFoto);
     void remover(String nomeArquivoAntigo);
-    InputStream recuperar(String nomeArquivo);
+    FotoRecuperada recuperar(String nomeArquivo);
 
     default void substituir(String nomeArquivoAntigo, NovaFoto novaFoto) {
         this.armazenar(novaFoto);
@@ -34,6 +33,21 @@ public interface FotoStorageService {
         private String contentType;
         private InputStream inputStream;
         private Long size;
+    }
+
+    @Getter
+    @Builder
+    class FotoRecuperada {
+        private InputStream inputStream;
+        private String url;
+
+        public boolean hasUrl() {
+            return url != null;
+        }
+
+        public boolean hasInputStream() {
+            return inputStream != null;
+        }
     }
 
 }

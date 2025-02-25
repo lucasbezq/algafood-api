@@ -1,4 +1,4 @@
-package com.algaworks.algafood.core;
+package com.algaworks.algafood.core.squiggly;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.bohnman.squiggly.Squiggly;

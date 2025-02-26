@@ -32,4 +32,6 @@ public class Constants {
 
     public static final String RELATORIO_VENDAS_DIARIAS_JASPER_PATH = "/relatorios/vendas-diarias.jasper";
 
+    public static final String ENCODE = "UTF-8";
+
 }

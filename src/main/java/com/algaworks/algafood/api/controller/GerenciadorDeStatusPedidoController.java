@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.domain.service.GerenciadorDeStatusPedidoService;
+import com.algaworks.algafood.domain.service.FluxoPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public class GerenciadorDeStatusPedidoController {
 
     @Autowired
-    private GerenciadorDeStatusPedidoService gerenciadorDeStatusService;
+    private FluxoPedidoService gerenciadorDeStatusService;
 
     @PutMapping("/confirmacao")
     @ResponseStatus(HttpStatus.NO_CONTENT)

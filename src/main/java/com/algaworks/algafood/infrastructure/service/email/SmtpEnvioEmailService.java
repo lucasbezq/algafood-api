@@ -5,10 +5,14 @@ import com.algaworks.algafood.domain.service.EnvioEmailService;
 import com.algaworks.algafood.domain.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import freemarker.template.Configuration;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 @Service
 public class SmtpEnvioEmailService implements EnvioEmailService {
@@ -25,15 +29,7 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
     @Override
     public void enviar(Mensagem mensagem) {
         try {
-            var mimeMessage = mailSender.createMimeMessage();
-            var corpo = processarTemplate(mensagem);
-
-            var helper = new MimeMessageHelper(mimeMessage, Constants.ENCODE);
-            helper.setFrom(emailProperties.getRemetente());
-            helper.setTo(mensagem.getDestinatarios().toArray(new String[0]));
-            helper.setSubject(mensagem.getAssunto());
-            helper.setText(corpo, true);
-
+            var mimeMessage = criarMimeMessage(mensagem);
             mailSender.send(mimeMessage);
         } catch (Exception e) {
             throw new EmailExceptionException("Não foi possível enviar e-mail", e);
@@ -49,4 +45,17 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
         }
     }
 
+    protected MimeMessage criarMimeMessage(Mensagem mensagem) throws MessagingException {
+        String corpo = processarTemplate(mensagem);
+
+        var mimeMessage = mailSender.createMimeMessage();
+
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+        helper.setFrom(emailProperties.getRemetente());
+        helper.setTo(mensagem.getDestinatarios().toArray(new String[0]));
+        helper.setSubject(mensagem.getAssunto());
+        helper.setText(corpo, true);
+
+        return mimeMessage;
+    }
 }

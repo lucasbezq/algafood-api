@@ -5,6 +5,7 @@ import com.algaworks.algafood.domain.service.EnvioEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class NotificacaoClientePedidoConfirmadoListener {
@@ -12,7 +13,7 @@ public class NotificacaoClientePedidoConfirmadoListener {
     @Autowired
     private EnvioEmailService envioEmailService;
 
-    @EventListener
+    @TransactionalEventListener
     public void handlePedidoConfirmado(PedidoConfirmadoEvent event) {
         var pedido = event.getPedido();
         var mensagem = EnvioEmailService.Mensagem.builder()

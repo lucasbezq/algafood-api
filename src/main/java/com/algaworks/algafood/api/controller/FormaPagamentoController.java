@@ -7,11 +7,14 @@ import com.algaworks.algafood.api.dto.request.FormaPagamentoRequest;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/formas-pagamento")
@@ -30,15 +33,21 @@ public class FormaPagamentoController {
     private FormaPagamentoConverter formaPagamentoConverter;
 
     @GetMapping
-    public List<FormaPagamentoDTO> listar() {
+    public ResponseEntity<List<FormaPagamentoDTO>> listar() {
         var formasPagamento = formaPagamentoRepository.findAll();
-        return formaPagamentoDTOConverter.toCollectionDTO(formasPagamento);
+        var dto = formaPagamentoDTOConverter.toCollectionDTO(formasPagamento);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(dto);
     }
 
     @GetMapping("/{formaPagamentoId}")
-    public FormaPagamentoDTO buscar(@PathVariable Long formaPagamentoId) {
+    public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long formaPagamentoId) {
         var formaPagamento = cadastroFormaPagamentoService.buscarFormaPagamento(formaPagamentoId);
-        return formaPagamentoDTOConverter.toDTO(formaPagamento);
+        var dto = formaPagamentoDTOConverter.toDTO(formaPagamento);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(dto);
     }
 
     @PostMapping
@@ -60,6 +69,5 @@ public class FormaPagamentoController {
     private void excluir(@PathVariable Long formaPagamentoId) {
         cadastroFormaPagamentoService.excluir(formaPagamentoId);
     }
-
 
 }

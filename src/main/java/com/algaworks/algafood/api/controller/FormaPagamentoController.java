@@ -11,6 +11,8 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -33,11 +35,19 @@ public class FormaPagamentoController {
     private FormaPagamentoConverter formaPagamentoConverter;
 
     @GetMapping
-    public ResponseEntity<List<FormaPagamentoDTO>> listar() {
+    public ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request) {
+        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+
+        var eTag = "0";
+        var dataUltimaAtualizacao = formaPagamentoRepository.getDataultimaAtualizacao();
+        if (dataUltimaAtualizacao != null) eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
+        if (request.checkNotModified(eTag)) return null;
+
         var formasPagamento = formaPagamentoRepository.findAll();
         var dto = formaPagamentoDTOConverter.toCollectionDTO(formasPagamento);
         return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+                .eTag(eTag)
                 .body(dto);
     }
 

@@ -22,3 +22,4 @@ A AlgaFood API é uma plataforma de entrega de comida, desenvolvida com as tecno
 - ModelMapper
 - AWS (S3)
 - JavaScript
+- Swagger / OpenAPI

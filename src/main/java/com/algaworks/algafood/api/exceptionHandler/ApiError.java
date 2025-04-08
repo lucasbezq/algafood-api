@@ -1,6 +1,8 @@
 package com.algaworks.algafood.api.exceptionHandler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 import java.time.OffsetDateTime;
@@ -22,6 +24,7 @@ public class ApiError {
 
     @Getter
     @Builder
+    @ApiModel("Objects")
     public static class Object {
         private String name;
         private String userMessage;

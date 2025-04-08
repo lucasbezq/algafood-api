@@ -4,14 +4,13 @@ import com.algaworks.algafood.api.converter.CidadeConverter;
 import com.algaworks.algafood.api.converter.CidadeDTOConverter;
 import com.algaworks.algafood.api.dto.CidadeDTO;
 import com.algaworks.algafood.api.dto.request.CidadeRequest;
+import com.algaworks.algafood.api.exceptionHandler.ApiError;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,6 +44,10 @@ public class CidadeController {
     }
 
     @ApiOperation("Busca uma cidade através do ID")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "ID da cidade inválido.", response = ApiError.class),
+            @ApiResponse(code = 404, message = "Cidade não encontrada.", response = ApiError.class)
+    })
     @GetMapping(path = "/{cidadeId}")
     public CidadeDTO buscar(@ApiParam(value = "ID de uma cidade", example = "1") @PathVariable Long cidadeId) {
         var cidade = cadastroCidadeService.buscarCidade(cidadeId);
@@ -65,6 +68,10 @@ public class CidadeController {
     }
 
     @ApiOperation("Atualiza uma cidade através do ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Cidade atualizada."),
+            @ApiResponse(code = 404, message = "Cidade não encontrada.", response = ApiError.class)
+    })
     @PutMapping(path = "/{cidadeId}")
     public CidadeDTO atualizar(@ApiParam(value = "ID de uma cidade", example = "1") @PathVariable Long cidadeId,
                                @ApiParam(name = "body", value = "Representação de uma nova cidade com os novos dados")
@@ -79,6 +86,10 @@ public class CidadeController {
     }
 
     @ApiOperation("Exclui uma cidade através do ID")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Cidade excluída."),
+            @ApiResponse(code = 404, message = "Cidade não encontrada.", response = ApiError.class)
+    })
     @DeleteMapping(path = "/{cidadeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@ApiParam(value = "ID de uma cidade", example = "1") @PathVariable Long cidadeId) {

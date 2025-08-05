@@ -15,13 +15,14 @@ import io.swagger.annotations.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/cidades")
+@RequestMapping(path = "/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CidadeController implements CidadeControllerOpenApi {
 
     @Autowired
@@ -36,7 +37,6 @@ public class CidadeController implements CidadeControllerOpenApi {
     @Autowired
     private CidadeConverter cidadeConverter;
 
-    @ApiOperation("Lista as cidades")
     @GetMapping
     public List<CidadeDTO> listar() {
         var cidades = cidadeRepository.findAll();

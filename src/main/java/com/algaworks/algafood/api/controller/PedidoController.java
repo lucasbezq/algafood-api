@@ -78,9 +78,14 @@ public class PedidoController {
     private Pageable convertPageable(Pageable apiPageable) {
         var map = Map.of(
                 "codigo", "codigo",
-                "restaurante.nome", "restaurante.nome",
+                "subtotal", "subtotal",
+                "taxaFrete", "taxaFrete",
                 "valorTotal", "valorTotal",
-                "nomeCliente", "cliente.nome"
+                "dataCriacao", "dataCriacao",
+                "restaurante.nome", "restaurante.nome",
+                "restaurante.id", "restaurante.id",
+                "cliente.id", "cliente.id",
+                "cliente.nome", "cliente.nome"
         );
 
         return PageableTranslator.translate(apiPageable, map);

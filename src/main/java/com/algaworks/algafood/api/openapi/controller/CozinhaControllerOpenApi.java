@@ -48,5 +48,5 @@ public interface CozinhaControllerOpenApi {
             @ApiResponse(code = 404, message = "Cozinha não encontrada.", response = ApiError.class),
             @ApiResponse(code = 409, message = "Cozinha em uso, não pode ser excluída.", response = ApiError.class)
     })
-    public void remover(@ApiParam("ID de uma cozinha") Long cozinhaId);
+    public void remover(@ApiParam(value = "ID de uma cozinha", example = "1") Long cozinhaId);
 }

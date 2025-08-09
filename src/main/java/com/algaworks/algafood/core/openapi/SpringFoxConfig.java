@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
@@ -50,6 +51,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
                 .additionalModels(typeResolver.resolve(ApiError.class))
+                .ignoredParameterTypes(ServletWebRequest.class)
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
                 .alternateTypeRules(
                         AlternateTypeRules.newRule(
@@ -58,7 +60,10 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         )
                 )
                 .apiInfo(info())
-                .tags(new Tag("Cidades", "Gerencia as cidades"));
+                .tags(new Tag("Cidades", "Gerencia as cidades"),
+                        new Tag("Cozinhas", "Gerencia as cozinhas"),
+                        new Tag("Formas de Pagamento", "Gerencia as formas de pagamento"),
+                        new Tag("Grupos", "Gerencia os grupos de usuários"));
     }
 
     private List<ResponseMessage> globalGetResponseMessages() {

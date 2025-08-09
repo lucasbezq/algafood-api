@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.converter.FormaPagamentoConverter;
 import com.algaworks.algafood.api.converter.FormaPagamentoDTOConverter;
 import com.algaworks.algafood.api.dto.FormaPagamentoDTO;
 import com.algaworks.algafood.api.dto.request.FormaPagamentoRequest;
+import com.algaworks.algafood.api.openapi.controller.FormaPagamentoOpenApi;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/formas-pagamento")
-public class FormaPagamentoController {
+public class FormaPagamentoController implements FormaPagamentoOpenApi {
 
     @Autowired
     private FormaPagamentoRepository formaPagamentoRepository;
@@ -83,7 +84,7 @@ public class FormaPagamentoController {
 
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    private void excluir(@PathVariable Long formaPagamentoId) {
+    public void excluir(@PathVariable Long formaPagamentoId) {
         cadastroFormaPagamentoService.excluir(formaPagamentoId);
     }
 

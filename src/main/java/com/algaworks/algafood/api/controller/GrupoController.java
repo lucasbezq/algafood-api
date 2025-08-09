@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.api.controller.openapi.GrupoControllerOpenApi;
+import com.algaworks.algafood.api.openapi.controller.GrupoControllerOpenApi;
 import com.algaworks.algafood.api.converter.GrupoConverter;
 import com.algaworks.algafood.api.converter.GrupoDTOConverter;
 import com.algaworks.algafood.api.dto.GrupoDTO;

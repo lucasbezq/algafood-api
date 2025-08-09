@@ -8,6 +8,6 @@ import lombok.Setter;
 
 import java.util.List;
 
-@ApiModel("CozinhasModel")
+@ApiModel("CozinhasDTO")
 public class CozinhasModelOpenApi extends PagedModelOpenApi<CozinhaDTO> {
 }

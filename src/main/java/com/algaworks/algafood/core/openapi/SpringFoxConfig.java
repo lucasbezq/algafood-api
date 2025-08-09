@@ -1,9 +1,12 @@
 package com.algaworks.algafood.core.openapi;
 
 import com.algaworks.algafood.api.dto.CozinhaDTO;
+import com.algaworks.algafood.api.dto.PedidoDTO;
+import com.algaworks.algafood.api.dto.PedidoResumoDTO;
 import com.algaworks.algafood.api.exceptionHandler.ApiError;
 import com.algaworks.algafood.api.openapi.model.CozinhasModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.PedidosModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,14 +54,6 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
-                .globalOperationParameters(Arrays.asList(
-                        new ParameterBuilder()
-                                .name("campos")
-                                .description("Nomes dos campos para filtrar na resposta, separados por vírgula")
-                                .parameterType("query")
-                                .modelRef(new ModelRef("string"))
-                                .build()
-                ))
                 .additionalModels(typeResolver.resolve(ApiError.class))
                 .ignoredParameterTypes(ServletWebRequest.class)
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
@@ -66,13 +61,19 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         AlternateTypeRules.newRule(
                                 typeResolver.resolve(Page.class, CozinhaDTO.class),
                                 CozinhasModelOpenApi.class
+                        ),
+                        AlternateTypeRules.newRule(
+                                typeResolver.resolve(Page.class, PedidoResumoDTO.class),
+                                PedidosModelOpenApi.class
                         )
                 )
                 .apiInfo(info())
                 .tags(new Tag("Cidades", "Gerencia as cidades"),
                         new Tag("Cozinhas", "Gerencia as cozinhas"),
                         new Tag("Formas de Pagamento", "Gerencia as formas de pagamento"),
-                        new Tag("Grupos", "Gerencia os grupos de usuários"));
+                        new Tag("Grupos", "Gerencia os grupos de usuários"),
+                        new Tag("Pedidos", "Gerencia os pedidos")
+                        );
     }
 
     private List<ResponseMessage> globalGetResponseMessages() {

@@ -7,6 +7,7 @@ import com.algaworks.algafood.api.dto.FotoProdutoDTO;
 import com.algaworks.algafood.api.dto.ProdutoDTO;
 import com.algaworks.algafood.api.dto.request.FotoProdutoRequest;
 import com.algaworks.algafood.api.dto.request.ProdutoRequest;
+import com.algaworks.algafood.api.openapi.controller.ProdutoControllerOpenApi;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.service.CadastroProdutoService;
@@ -31,8 +32,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/restaurantes/{restauranteId}/produtos")
-public class ProdutoController {
+@RequestMapping(value = "/restaurantes/{restauranteId}/produtos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class ProdutoController implements ProdutoControllerOpenApi {
 
     @Autowired
     private CadastroRestauranteService cadastroRestauranteService;
@@ -106,9 +107,9 @@ public class ProdutoController {
         return fotoProdutoDTOConverter.toDTO(foto);
     }
 
-    @GetMapping(path = "/{produtoId}/foto")
+    @GetMapping(path = "/{produtoId}/foto", produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> servirFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
-                                                          @RequestHeader("accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
+                                        @RequestHeader("accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
             var foto = catalogoFotoProdutoService.buscarFoto(restauranteId, produtoId);
 
@@ -136,7 +137,7 @@ public class ProdutoController {
 
     @DeleteMapping(path = "/{produtoId}/foto")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+    public void removerFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         catalogoFotoProdutoService.removerFoto(restauranteId, produtoId);
     }
 

@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.converter.RestauranteConverter;
 import com.algaworks.algafood.api.converter.RestauranteDTOConverter;
 import com.algaworks.algafood.api.dto.RestauranteDTO;
 import com.algaworks.algafood.api.dto.request.RestauranteRequest;
+import com.algaworks.algafood.api.openapi.controller.RestauranteControllerOpenApi;
 import com.algaworks.algafood.domain.exception.*;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/restaurantes")
-public class RestauranteController {
+public class RestauranteController implements RestauranteControllerOpenApi {
 
     @Autowired
     private RestauranteRepository restauranteRepository;

@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.converter.EstadoConverter;
 import com.algaworks.algafood.api.converter.EstadoDTOConverter;
 import com.algaworks.algafood.api.dto.EstadoDTO;
 import com.algaworks.algafood.api.dto.request.EstadoRequest;
+import com.algaworks.algafood.api.openapi.controller.EstadoControllerOpenApi;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
 import com.algaworks.algafood.domain.service.CadastroEstadoService;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/estados")
-public class EstadoController {
+public class EstadoController implements EstadoControllerOpenApi {
 
     @Autowired
     private EstadoRepository estadoRepository;
@@ -50,7 +51,7 @@ public class EstadoController {
     }
 
     @PutMapping(path = "/{estadoId}")
-    public EstadoDTO salvar(@PathVariable Long estadoId, @RequestBody @Valid EstadoRequest estadoRequest) {
+    public EstadoDTO ataualizar(@PathVariable Long estadoId, @RequestBody @Valid EstadoRequest estadoRequest) {
         var estadoAtual = cadastroEstadoService.buscarEstado(estadoId);
         estadoConverter.copyToDomain(estadoRequest, estadoAtual);
         return estadoDTOConverter.toDTO(cadastroEstadoService.salvar(estadoAtual));

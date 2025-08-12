@@ -84,11 +84,13 @@ public class ProdutoController implements ProdutoControllerOpenApi {
     }
 
     @PutMapping(path = "/{produtoId}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
-                                        @Valid FotoProdutoRequest request) throws IOException {
+    public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId,
+                                        @PathVariable Long produtoId,
+                                        @Valid FotoProdutoRequest request,
+                                        @RequestPart(required = true) MultipartFile arquivo) throws IOException {
         var produto = cadastroProdutoService.buscarProduto(produtoId, restauranteId);
-        var arquivo = request.getArquivo();
-        
+        arquivo = request.getArquivo();
+
         //TODO: Mover para um converter
         var foto = new FotoProduto();
         foto.setProduto(produto);

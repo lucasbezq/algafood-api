@@ -6,20 +6,22 @@ import com.algaworks.algafood.api.dto.UsuarioDTO;
 import com.algaworks.algafood.api.dto.request.UsuarioAtualizacaoRequest;
 import com.algaworks.algafood.api.dto.request.UsuarioRequest;
 import com.algaworks.algafood.api.dto.request.UsuarioSenhaRequest;
+import com.algaworks.algafood.api.openapi.controller.UsuarioControllerOpenApi;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.UsuarioNaoEncontradoException;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/usuarios")
-public class UsuarioController {
+@RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UsuarioController implements UsuarioControllerOpenApi {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -34,7 +36,7 @@ public class UsuarioController {
     private CadastroUsuarioService cadastroUsuarioService;
 
     @GetMapping
-    private List<UsuarioDTO> listar() {
+    public List<UsuarioDTO> listar() {
         var usuarios = usuarioRepository.findAll();
         return usuarioDTOConverter.toCollectionDTO(usuarios);
     }

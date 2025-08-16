@@ -9,11 +9,17 @@ import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
+import com.algaworks.algafood.util.UriHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -50,12 +56,15 @@ public class CidadeController implements CidadeControllerOpenApi {
     public CidadeDTO adicionar(@RequestBody @Valid CidadeRequest cidadeRequest) {
         try {
             var cidade = cidadeConverter.toDomain(cidadeRequest);
-            return cidadeDTOConverter.toDTO(cadastroCidadeService.salvar(cidade));
+            var cidadeDTO = cidadeDTOConverter.toDTO(cadastroCidadeService.salvar(cidade));
+
+            UriHelper.addUriInResponseHeader(cidadeDTO.getId());
+
+            return cidadeDTO;
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage());
         }
     }
-
 
     @PutMapping(path = "/{cidadeId}")
     public CidadeDTO atualizar(@PathVariable Long cidadeId,

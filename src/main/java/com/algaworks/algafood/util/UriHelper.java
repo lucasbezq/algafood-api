@@ -13,7 +13,7 @@ public class UriHelper {
 
     public static void addUriInResponseHeader(Object resourceId) {
         var uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
-                .path("/{cidadeId}")
+                .path("/{id}")
                 .buildAndExpand(resourceId)
                 .toUri();
 

@@ -11,6 +11,8 @@ import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 import com.algaworks.algafood.util.UriHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +24,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(path = "/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -48,7 +52,21 @@ public class CidadeController implements CidadeControllerOpenApi {
     @GetMapping(path = "/{cidadeId}")
     public CidadeDTO buscar(@PathVariable Long cidadeId) {
         var cidade = cadastroCidadeService.buscarCidade(cidadeId);
-        return cidadeDTOConverter.toDTO(cidade);
+        var cidadeDTO = cidadeDTOConverter.toDTO(cidade);
+
+        cidadeDTO.add(linkTo(CidadeController.class)
+                .slash(cidadeDTO.getId())
+                .withSelfRel());
+
+        cidadeDTO.add(linkTo(CidadeController.class)
+                .slash(cidadeDTO.getId())
+                .withRel("cidades"));
+
+        cidadeDTO.getEstado().add(linkTo(EstadoController.class)
+                .slash(cidadeDTO.getEstado().getId())
+                .withSelfRel());
+
+        return cidadeDTO;
     }
 
     @PostMapping

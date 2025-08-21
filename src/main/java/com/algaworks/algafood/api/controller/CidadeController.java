@@ -11,19 +11,12 @@ import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 import com.algaworks.algafood.util.UriHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.HttpHeaders;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -45,26 +38,15 @@ public class CidadeController implements CidadeControllerOpenApi {
     private CidadeConverter cidadeConverter;
 
     @GetMapping
-    public List<CidadeDTO> listar() {
+    public CollectionModel<CidadeDTO> listar() {
         var cidades = cidadeRepository.findAll();
-        return cidadeDTOConverter.toCollectionDTO(cidades);
+        return cidadeDTOConverter.toCollectionModel(cidades);
     }
 
     @GetMapping(path = "/{cidadeId}")
     public CidadeDTO buscar(@PathVariable Long cidadeId) {
         var cidade = cadastroCidadeService.buscarCidade(cidadeId);
-        var cidadeDTO = cidadeDTOConverter.toDTO(cidade);
-
-        cidadeDTO.add(linkTo(methodOn(CidadeController.class)
-                .buscar(cidadeDTO.getId())).withSelfRel());
-
-        cidadeDTO.add(linkTo(methodOn(CidadeController.class)
-                .listar()).withRel("cidades"));
-
-        cidadeDTO.getEstado().add(linkTo(methodOn(EstadoController.class)
-                .buscar(cidadeDTO.getEstado().getId())).withSelfRel());
-
-        return cidadeDTO;
+        return cidadeDTOConverter.toModel(cidade);
     }
 
     @PostMapping
@@ -72,7 +54,7 @@ public class CidadeController implements CidadeControllerOpenApi {
     public CidadeDTO adicionar(@RequestBody @Valid CidadeRequest cidadeRequest) {
         try {
             var cidade = cidadeConverter.toDomain(cidadeRequest);
-            var cidadeDTO = cidadeDTOConverter.toDTO(cadastroCidadeService.salvar(cidade));
+            var cidadeDTO = cidadeDTOConverter.toModel(cadastroCidadeService.salvar(cidade));
 
             UriHelper.addUriInResponseHeader(cidadeDTO.getId());
 
@@ -88,12 +70,11 @@ public class CidadeController implements CidadeControllerOpenApi {
         var cidadeAtual = cadastroCidadeService.buscarCidade(cidadeId);
         cidadeConverter.copyToDomain(cidadeRequest, cidadeAtual);
         try {
-            return cidadeDTOConverter.toDTO(cadastroCidadeService.salvar(cidadeAtual));
+            return cidadeDTOConverter.toModel(cadastroCidadeService.salvar(cidadeAtual));
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
     }
-
 
     @DeleteMapping(path = "/{cidadeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

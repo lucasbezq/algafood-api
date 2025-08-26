@@ -12,12 +12,12 @@ import com.algaworks.algafood.domain.exception.UsuarioNaoEncontradoException;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,22 +36,22 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     private CadastroUsuarioService cadastroUsuarioService;
 
     @GetMapping
-    public List<UsuarioDTO> listar() {
+    public CollectionModel<UsuarioDTO> listar() {
         var usuarios = usuarioRepository.findAll();
-        return usuarioDTOConverter.toCollectionDTO(usuarios);
+        return usuarioDTOConverter.toCollectionModel(usuarios);
     }
 
     @GetMapping("/{usuarioId}")
     public UsuarioDTO buscar(@PathVariable Long usuarioId) {
         var usuario =  cadastroUsuarioService.buscarUsuario(usuarioId);
-        return usuarioDTOConverter.toDTO(usuario);
+        return usuarioDTOConverter.toModel(usuario);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioDTO adicionar(@RequestBody @Valid UsuarioRequest usuarioRequest) {
         var usuario = usuarioConverter.toDomain(usuarioRequest);
-        return usuarioDTOConverter.toDTO(cadastroUsuarioService.salvar(usuario));
+        return usuarioDTOConverter.toModel(cadastroUsuarioService.salvar(usuario));
     }
 
     @PutMapping("/{usuarioId}")
@@ -60,7 +60,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         try {
             var usuarioAtual = cadastroUsuarioService.buscarUsuario(usuarioId);
             usuarioConverter.copyToDomain(usuarioAtualizacaoRequest, usuarioAtual);
-            return usuarioDTOConverter.toDTO(cadastroUsuarioService.salvar(usuarioAtual));
+            return usuarioDTOConverter.toModel(cadastroUsuarioService.salvar(usuarioAtual));
         } catch (UsuarioNaoEncontradoException e) {
             throw new NegocioException(e.getMessage());
         }

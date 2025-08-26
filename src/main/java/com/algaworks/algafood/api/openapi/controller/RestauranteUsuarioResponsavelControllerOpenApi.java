@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.openapi.controller;
 
 import com.algaworks.algafood.api.dto.UsuarioDTO;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ public interface RestauranteUsuarioResponsavelControllerOpenApi {
     @ApiResponses({
         @ApiResponse(code = 200, message = "Lista de usuários responsáveis retornada com sucesso.")
     })
-    public List<UsuarioDTO> listar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
+    public CollectionModel<UsuarioDTO> listar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
 
     @ApiOperation("Associa um usuário responsável a um restaurante")
     @ApiResponses({

@@ -2,14 +2,12 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.converter.UsuarioDTOConverter;
 import com.algaworks.algafood.api.dto.UsuarioDTO;
-import com.algaworks.algafood.api.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
 import com.algaworks.algafood.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/restaurantes/{restauranteId}/responsaveis")
@@ -22,10 +20,10 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     private UsuarioDTOConverter usuarioDTOConverter;
 
     @GetMapping
-    public List<UsuarioDTO> listar(@PathVariable Long restauranteId) {
+    public CollectionModel<UsuarioDTO> listar(@PathVariable Long restauranteId) {
         var restaurante = cadastroRestauranteService.buscarRestaurante(restauranteId);
 
-        return usuarioDTOConverter.toCollectionDTO(restaurante.getResponsaveis());
+        return usuarioDTOConverter.toCollectionModel(restaurante.getResponsaveis());
     }
 
     @PutMapping("/{usuarioId}")

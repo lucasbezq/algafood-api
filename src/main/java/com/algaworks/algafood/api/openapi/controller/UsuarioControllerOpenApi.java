@@ -4,20 +4,14 @@ import com.algaworks.algafood.api.dto.UsuarioDTO;
 import com.algaworks.algafood.api.dto.request.UsuarioAtualizacaoRequest;
 import com.algaworks.algafood.api.dto.request.UsuarioRequest;
 import com.algaworks.algafood.api.dto.request.UsuarioSenhaRequest;
-import com.algaworks.algafood.domain.exception.NegocioException;
-import com.algaworks.algafood.domain.exception.UsuarioNaoEncontradoException;
 import io.swagger.annotations.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Usuários")
 public interface UsuarioControllerOpenApi {
 
     @ApiOperation("Listar usuários")
-    public List<UsuarioDTO> listar();
+    public CollectionModel<UsuarioDTO> listar();
 
     @ApiOperation("Buscar usuário por ID")
     @ApiResponses({

@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.converter;
 
 import com.algaworks.algafood.api.controller.UsuarioController;
+import com.algaworks.algafood.api.controller.UsuarioGrupoController;
 import com.algaworks.algafood.api.dto.UsuarioDTO;
 import com.algaworks.algafood.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
@@ -32,6 +33,10 @@ public class UsuarioDTOConverter extends RepresentationModelAssemblerSupport<Usu
 
         usuarioDTO.add(linkTo(methodOn(UsuarioController.class)
                 .listar()).withRel("usuarios"));
+
+        usuarioDTO.add(linkTo(methodOn(UsuarioGrupoController.class)
+                .listar(usuario.getId()))
+                .withRel("grupos-usuario"));
 
         return usuarioDTO;
     }

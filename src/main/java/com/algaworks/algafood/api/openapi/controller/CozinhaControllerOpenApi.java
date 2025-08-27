@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ import javax.validation.Valid;
 public interface CozinhaControllerOpenApi {
 
     @ApiOperation("Lista as cozinhas")
-    public Page<CozinhaDTO> listar(Pageable pageable);
+    public PagedModel<CozinhaDTO> listar(Pageable pageable);
 
     @ApiOperation("Busca uma cozinha através do ID")
     @ApiResponses({

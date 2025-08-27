@@ -46,7 +46,6 @@ public class PedidoResumoDTOConverter extends RepresentationModelAssemblerSuppor
                 .buscar(pedido.getCliente().getId()))
                 .withSelfRel());
 
-
         return pedidoResumoDTO;
     }
 

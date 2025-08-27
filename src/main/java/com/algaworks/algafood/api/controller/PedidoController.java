@@ -7,6 +7,7 @@ import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.api.dto.PedidoResumoDTO;
 import com.algaworks.algafood.api.dto.request.PedidoRequest;
 import com.algaworks.algafood.api.openapi.controller.PedidoControllerOpenApi;
+import com.algaworks.algafood.core.data.PageWrapper;
 import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -55,6 +56,8 @@ public class PedidoController implements PedidoControllerOpenApi {
     public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
         pageable = convertPageable(pageable);
         var pedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+
+        pedidos = new PageWrapper<>(pedidos, pageable);
         return pagedResourcesAssembler.toModel(pedidos, pedidoResumoDTOConverter);
     }
 

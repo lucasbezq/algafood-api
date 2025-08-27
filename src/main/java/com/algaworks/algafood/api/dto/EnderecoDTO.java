@@ -3,11 +3,12 @@ package com.algaworks.algafood.api.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 
 @Getter
 @Setter
-public class EnderecoDTO {
+public class EnderecoDTO extends RepresentationModel<EnderecoDTO> {
 
     @ApiModelProperty(example = "38400-000")
     private String cep;

@@ -1,13 +1,14 @@
 package com.algaworks.algafood.api.converter;
 
+import com.algaworks.algafood.api.controller.*;
 import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.domain.model.Pedido;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class PedidoDTOConverter {
@@ -15,13 +16,40 @@ public class PedidoDTOConverter {
     @Autowired
     private ModelMapper modelMapper;
 
-    public PedidoDTO toDTO(Pedido pedido) {
-        return modelMapper.map(pedido, PedidoDTO.class);
+    public PedidoDTO toModel(Pedido pedido) {
+        var pedidoDTO = modelMapper.map(pedido, PedidoDTO.class);
+
+        pedidoDTO.add(linkTo(methodOn(PedidoController.class)
+                .buscar(pedido.getCodigo()))
+                .withSelfRel());
+
+        pedidoDTO.add(linkTo(methodOn(PedidoController.class)
+                .pesquisar(null, null))
+                .withRel("pedidos"));
+
+        pedidoDTO.getRestaurante().add(linkTo(methodOn(RestauranteController.class)
+                .buscar(pedido.getRestaurante().getId()))
+                .withSelfRel());
+
+        pedidoDTO.getCliente().add(linkTo(methodOn(UsuarioController.class)
+                .buscar(pedido.getCliente().getId()))
+                .withSelfRel());
+
+        pedidoDTO.getEnderecoEntrega().getCidade().add(linkTo(methodOn(CidadeController.class)
+                .buscar(pedido.getEnderecoEntrega().getCidade().getId()))
+                .withSelfRel());
+
+        pedidoDTO.getFormaPagamento().add(linkTo(methodOn(FormaPagamentoController.class)
+                .buscar(pedido.getFormaPagamento().getId(), null))
+                .withSelfRel());
+
+        pedidoDTO.getItens().forEach(item -> {
+            item.add(linkTo(methodOn(ProdutoController.class)
+                    .buscar(pedido.getRestaurante().getId(), item.getProdutoId()))
+                    .withSelfRel());
+        });
+
+        return pedidoDTO;
     }
 
-    public List<PedidoDTO> toCollectionDTO(List<Pedido> pedidos) {
-        return pedidos.stream()
-                .map(pedido -> toDTO(pedido))
-                .collect(Collectors.toList());
-    }
 }

@@ -35,7 +35,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
     private CozinhaConverter cozinhaConverter;
 
     @Autowired
-    private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;;
+    private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 
     @GetMapping
     public PagedModel<CozinhaDTO> listar(Pageable pageable) {

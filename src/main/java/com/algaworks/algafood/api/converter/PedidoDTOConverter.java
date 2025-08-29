@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.LinksUtil;
 import com.algaworks.algafood.api.controller.*;
 import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.domain.model.Pedido;
+import com.algaworks.algafood.domain.model.StatusPedido;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -55,17 +56,23 @@ public class PedidoDTOConverter {
                     .withSelfRel());
         });
 
-        pedidoDTO.add(linkTo(methodOn(GerenciadorDeStatusPedidoController.class)
-                .confirmar(pedido.getCodigo()))
-                .withRel("confirmar"));
+        if (pedido.podeSerConfirmado()) {
+            pedidoDTO.add(linkTo(methodOn(GerenciadorDeStatusPedidoController.class)
+                    .confirmar(pedido.getCodigo()))
+                    .withRel("confirmar"));
+        }
 
-        pedidoDTO.add(linkTo(methodOn(GerenciadorDeStatusPedidoController.class)
-                .entregar(pedido.getCodigo()))
-                .withRel("entregar"));
+        if (pedido.podeSerEntregue()) {
+            pedidoDTO.add(linkTo(methodOn(GerenciadorDeStatusPedidoController.class)
+                    .entregar(pedido.getCodigo()))
+                    .withRel("entregar"));
+        }
 
-        pedidoDTO.add(linkTo(methodOn(GerenciadorDeStatusPedidoController.class)
-                .cancelar(pedido.getCodigo()))
-                .withRel("cancelar"));
+        if (pedido.podeSerCancelado()) {
+            pedidoDTO.add(linkTo(methodOn(GerenciadorDeStatusPedidoController.class)
+                    .cancelar(pedido.getCodigo()))
+                    .withRel("cancelar"));
+        }
 
         return pedidoDTO;
     }

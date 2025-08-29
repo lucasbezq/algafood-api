@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.converter;
 
+import com.algaworks.algafood.api.LinksUtil;
 import com.algaworks.algafood.api.controller.*;
 import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.domain.model.Pedido;
@@ -20,25 +21,17 @@ public class PedidoDTOConverter {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private LinksUtil linksUtil;
+
     public PedidoDTO toModel(Pedido pedido) {
         var pedidoDTO = modelMapper.map(pedido, PedidoDTO.class);
-        var pageVariables = new TemplateVariables(
-                new TemplateVariable("page", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("size", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("sort", TemplateVariable.VariableType.REQUEST_PARAM)
-        );
-        var pedidosUrl = linkTo(PedidoController.class).toUri().toString();
+
+        pedidoDTO.add(linksUtil.linkToPedidos());
 
         pedidoDTO.add(linkTo(methodOn(PedidoController.class)
                 .buscar(pedido.getCodigo()))
                 .withSelfRel());
-
-        pedidoDTO.add(new Link(UriTemplate.of(pedidosUrl,
-                pageVariables), "pedidos"));
-
-        /*pedidoDTO.add(linkTo(methodOn(PedidoController.class)
-                .pesquisar(null, null))
-                .withRel("pedidos"));*/
 
         pedidoDTO.getRestaurante().add(linkTo(methodOn(RestauranteController.class)
                 .buscar(pedido.getRestaurante().getId()))

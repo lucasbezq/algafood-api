@@ -55,6 +55,18 @@ public class PedidoDTOConverter {
                     .withSelfRel());
         });
 
+        pedidoDTO.add(linkTo(methodOn(GerenciadorDeStatusPedidoController.class)
+                .confirmar(pedido.getCodigo()))
+                .withRel("confirmar"));
+
+        pedidoDTO.add(linkTo(methodOn(GerenciadorDeStatusPedidoController.class)
+                .entregar(pedido.getCodigo()))
+                .withRel("entregar"));
+
+        pedidoDTO.add(linkTo(methodOn(GerenciadorDeStatusPedidoController.class)
+                .cancelar(pedido.getCodigo()))
+                .withRel("cancelar"));
+
         return pedidoDTO;
     }
 

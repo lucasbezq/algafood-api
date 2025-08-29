@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.openapi.controller;
 
 import io.swagger.annotations.*;
+import org.springframework.http.ResponseEntity;
 
 @Api(tags = "Pedidos")
 public interface GerenciadorDeStatusPedidoControllerOpenApi {
@@ -11,7 +12,7 @@ public interface GerenciadorDeStatusPedidoControllerOpenApi {
             @ApiResponse(code = 400, message = "Código do pedido inválido."),
             @ApiResponse(code = 404, message = "Pedido não encontrado.")
     })
-    public void confirmar(@ApiParam(value = "Código de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55") String codigoPedido);
+    public ResponseEntity<Void> confirmar(@ApiParam(value = "Código de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55") String codigoPedido);
 
     @ApiOperation("Entrega de pedido")
     @ApiResponses({
@@ -19,7 +20,7 @@ public interface GerenciadorDeStatusPedidoControllerOpenApi {
             @ApiResponse(code = 400, message = "Código do pedido inválido."),
             @ApiResponse(code = 404, message = "Pedido não encontrado.")
     })
-    public void entregar(@ApiParam(value = "Código de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55") String codigoPedido);
+    public ResponseEntity<Void> entregar(@ApiParam(value = "Código de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55") String codigoPedido);
 
     @ApiOperation("Cancelamento de pedido")
     @ApiResponses({
@@ -27,6 +28,6 @@ public interface GerenciadorDeStatusPedidoControllerOpenApi {
             @ApiResponse(code = 400, message = "Código do pedido inválido."),
             @ApiResponse(code = 404, message = "Pedido não encontrado.")
     })
-    public void cancelar(@ApiParam(value = "Código de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55") String codigoPedido);
+    public ResponseEntity<Void> cancelar(@ApiParam(value = "Código de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55") String codigoPedido);
 
 }

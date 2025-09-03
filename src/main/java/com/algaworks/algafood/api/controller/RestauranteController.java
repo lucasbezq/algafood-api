@@ -2,14 +2,18 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.converter.RestauranteConverter;
 import com.algaworks.algafood.api.converter.RestauranteDTOConverter;
+import com.algaworks.algafood.api.converter.RestauranteResumoDTOConverter;
 import com.algaworks.algafood.api.dto.RestauranteDTO;
+import com.algaworks.algafood.api.dto.RestauranteResumoDTO;
 import com.algaworks.algafood.api.dto.request.RestauranteRequest;
 import com.algaworks.algafood.api.openapi.controller.RestauranteControllerOpenApi;
 import com.algaworks.algafood.domain.exception.*;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,15 +39,18 @@ public class RestauranteController implements RestauranteControllerOpenApi {
     @Autowired
     private RestauranteConverter restauranteConverter;
 
+    @Autowired
+    private RestauranteResumoDTOConverter restauranteResumoDTOConverter;
+
     @GetMapping
-    public List<RestauranteDTO> listar() {
+    public CollectionModel<RestauranteResumoDTO> listar() {
         var restaurantes = restauranteRepository.findAll();
-        return restauranteDTOConverter.toCollectionDTO(restaurantes);
+        return restauranteResumoDTOConverter.toCollectionModel(restaurantes);
     }
 
     @GetMapping("/{restauranteId}")
     public RestauranteDTO buscar(@PathVariable("restauranteId") Long restauranteId) {
-        return restauranteDTOConverter.toDTO(cadastroRestauranteService.buscarRestaurante(restauranteId));
+        return restauranteDTOConverter.toModel(cadastroRestauranteService.buscarRestaurante(restauranteId));
     }
 
     @PostMapping
@@ -51,7 +58,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
     public RestauranteDTO adicionar(@RequestBody @Valid RestauranteRequest restauranteRequest) {
         try {
             var restaurante = restauranteConverter.toDomain(restauranteRequest);
-            return restauranteDTOConverter.toDTO(cadastroRestauranteService.salvar(restaurante));
+            return restauranteDTOConverter.toModel(cadastroRestauranteService.salvar(restaurante));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -63,7 +70,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
             var restauranteAtual = cadastroRestauranteService.buscarRestaurante(restauranteId);
             restauranteConverter.copyToDomain(restauranteRequest, restauranteAtual);
 
-            return restauranteDTOConverter.toDTO(cadastroRestauranteService.salvar(restauranteAtual));
+            return restauranteDTOConverter.toModel(cadastroRestauranteService.salvar(restauranteAtual));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -102,13 +109,15 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 
     @PutMapping("/{restauranteId}/abertura")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void abrir(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> abrir(@PathVariable Long restauranteId) {
         cadastroRestauranteService.abrirRestaurante(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{restauranteId}/fechamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void fechar(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> fechar(@PathVariable Long restauranteId) {
         cadastroRestauranteService.fecharRestaurante(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 }

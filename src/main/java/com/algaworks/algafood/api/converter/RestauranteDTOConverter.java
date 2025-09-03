@@ -1,29 +1,66 @@
 package com.algaworks.algafood.api.converter;
 
-import com.algaworks.algafood.api.dto.CozinhaDTO;
+import com.algaworks.algafood.api.controller.*;
 import com.algaworks.algafood.api.dto.RestauranteDTO;
 import com.algaworks.algafood.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class RestauranteDTOConverter {
+public class RestauranteDTOConverter extends RepresentationModelAssemblerSupport<Restaurante, RestauranteDTO> {
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public RestauranteDTO toDTO(Restaurante restaurante) {
-        return modelMapper.map(restaurante, RestauranteDTO.class);
+    public RestauranteDTOConverter() {
+        super(RestauranteController.class, RestauranteDTO.class);
     }
 
-    public List<RestauranteDTO> toCollectionDTO(List<Restaurante> restaurantes) {
-        return restaurantes.stream()
-                .map(restaurante -> toDTO(restaurante))
-                .collect(Collectors.toList());
+    @Override
+    public RestauranteDTO toModel(Restaurante restaurante) {
+     var restauranteDTO = modelMapper.map(restaurante, RestauranteDTO.class);
+
+        restauranteDTO.add(linkTo(methodOn(RestauranteController.class)
+                .buscar(restaurante.getId()))
+                .withSelfRel());
+
+        restauranteDTO.add(linkTo(methodOn(RestauranteController.class)
+                .listar()).withRel("restaurantes"));
+
+        restauranteDTO.getCozinha().add(linkTo(methodOn(CozinhaController.class)
+                .buscar(restaurante.getCozinha().getId()))
+                .withSelfRel());
+
+        restauranteDTO.getEndereco()
+                .getCidade()
+                .add(linkTo(methodOn(CidadeController.class)
+                .buscar(restaurante.getEndereco().getCidade().getId()))
+                .withSelfRel());
+
+        restauranteDTO.add(linkTo(methodOn(RestauranteFormaPagamentoController.class)
+                .listar(restaurante.getId()))
+                .withRel("formas-pagamento"));
+
+        restauranteDTO.add(linkTo(methodOn(RestauranteUsuarioResponsavelController.class)
+                .listar(restauranteDTO.getId()))
+                .withRel("responsaveis"));
+
+        if (restaurante.isAberto()) {
+            restauranteDTO.add(linkTo(methodOn(RestauranteController.class)
+                    .fechar(restaurante.getId()))
+                    .withRel("fechamento"));
+        } else {
+            restauranteDTO.add(linkTo(methodOn(RestauranteController.class)
+                    .abrir(restaurante.getId()))
+                    .withRel("abertura"));
+        }
+
+        return restauranteDTO;
     }
 
 }

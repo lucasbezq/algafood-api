@@ -103,4 +103,12 @@ public class Restaurante {
         return !aceitaFormaPagamento(formaPagamento);
     }
 
+    public boolean isAberto() {
+        return this.aberto;
+    }
+
+    public boolean isFechado() {
+        return !isAberto();
+    }
+
 }

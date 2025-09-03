@@ -46,12 +46,18 @@ insert into cidade (id, nome, estado_id) values (3, 'São Paulo', 2);
 insert into cidade (id, nome, estado_id) values (4, 'Campinas', 2);
 insert into cidade (id, nome, estado_id) values (5, 'Fortaleza', 3);
 
-insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) values (1, 'Thai Gourmet', 10, 1, utc_timestamp, utc_timestamp, true, true, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
-insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (2, 'Thai Delivery', 9.50, 1, utc_timestamp, utc_timestamp, true, true);
-insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (3, 'Tuk Tuk Comida Indiana', 15, 2, utc_timestamp, utc_timestamp, true, true);
-insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (4, 'Java Steakhouse', 12, 3, utc_timestamp, utc_timestamp, true, true);
-insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (5, 'Lanchonete do Tio Sam', 11, 4, utc_timestamp, utc_timestamp, true, true);
-insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (6, 'Bar da Maria', 6, 4, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (
+    id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao,
+    ativo, aberto, endereco_cidade_id, endereco_cep,
+    endereco_logradouro, endereco_numero, endereco_bairro
+) values
+(1, 'Thai Gourmet', 10, 1, utc_timestamp, utc_timestamp, true, true, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro'), -- Uberlândia
+(2, 'Thai Delivery', 9.50, 1, utc_timestamp, utc_timestamp, true, true, 2, '30100-111', 'Av. Brasil', '200', 'Centro'), -- Belo Horizonte
+(3, 'Tuk Tuk Comida Indiana', 15, 2, utc_timestamp, utc_timestamp, true, true, 2, '30100-222', 'Rua das Flores', '300', 'Savassi'), -- Belo Horizonte
+(4, 'Java Steakhouse', 12, 3, utc_timestamp, utc_timestamp, true, true, 3, '01000-333', 'Av. Paulista', '400', 'Bela Vista'), -- São Paulo
+(5, 'Lanchonete do Tio Sam', 11, 4, utc_timestamp, utc_timestamp, true, true, 4, '13000-444', 'Rua XV de Novembro', '500', 'Centro'), -- Campinas
+(6, 'Bar da Maria', 6, 4, utc_timestamp, utc_timestamp, true, true, 5, '60000-555', 'Rua Goiás', '600', 'Meireles'); -- Fortaleza
+
 
 insert into forma_pagamento (id, descricao, data_atualizacao) values (1, 'Cartão de crédito', utc_timestamp);
 insert into forma_pagamento (id, descricao, data_atualizacao) values (2, 'Cartão de débito', utc_timestamp);

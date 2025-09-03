@@ -1,9 +1,12 @@
 package com.algaworks.algafood.api.openapi.controller;
 
 import com.algaworks.algafood.api.dto.RestauranteDTO;
+import com.algaworks.algafood.api.dto.RestauranteResumoDTO;
 import com.algaworks.algafood.api.dto.request.RestauranteRequest;
 import com.algaworks.algafood.api.exceptionHandler.ApiError;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -11,7 +14,7 @@ import java.util.List;
 public interface RestauranteControllerOpenApi {
 
     @ApiOperation(value = "Lista todos os restaurantes")
-    public List<RestauranteDTO> listar();
+    public CollectionModel<RestauranteResumoDTO> listar();
 
     @ApiOperation("Busca um restaurante por ID")
     @ApiResponses({
@@ -69,7 +72,7 @@ public interface RestauranteControllerOpenApi {
             @ApiResponse(code = 204, message = "Restaurante aberto com sucesso."),
             @ApiResponse(code = 404, message = "Restaurante não encontrado.", response = ApiError.class)
     })
-    public void abrir(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
+    public ResponseEntity<Void> abrir(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
 
 
     @ApiOperation("Fecha um restaurante por ID")
@@ -77,5 +80,5 @@ public interface RestauranteControllerOpenApi {
             @ApiResponse(code = 204, message = "Restaurante fechado com sucesso."),
             @ApiResponse(code = 404, message = "Restaurante não encontrado.", response = ApiError.class)
     })
-    public void fechar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
+    public ResponseEntity<Void> fechar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
 }

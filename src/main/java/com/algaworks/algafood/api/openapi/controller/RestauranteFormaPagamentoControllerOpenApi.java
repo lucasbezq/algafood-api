@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.openapi.controller;
 
 import com.algaworks.algafood.api.dto.FormaPagamentoDTO;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface RestauranteFormaPagamentoControllerOpenApi {
 
     @ApiOperation("Lista as formas de pagamento associadas a um restaurante")
-    public List<FormaPagamentoDTO> listar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
+    public CollectionModel<FormaPagamentoDTO> listar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
 
     @ApiOperation("Desassocia uma forma de pagamento de um restaurante")
     @ApiResponses({

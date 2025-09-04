@@ -5,10 +5,9 @@ import com.algaworks.algafood.api.dto.FormaPagamentoDTO;
 import com.algaworks.algafood.api.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/restaurantes/{restauranteId}/formas-pagamento")
@@ -21,9 +20,9 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
     private FormaPagamentoDTOConverter formaPagamentoDTOConverter;
 
     @GetMapping
-    public List<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
+    public CollectionModel<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
         var restaurante = cadastroRestauranteService.buscarRestaurante(restauranteId);
-        return formaPagamentoDTOConverter.toCollectionDTO(restaurante.getFormasPagamento());
+        return formaPagamentoDTOConverter.toCollectionModel(restaurante.getFormasPagamento(), restauranteId);
     }
 
     @DeleteMapping("/{formaPagamentoId}")

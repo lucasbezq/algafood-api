@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.dto.FormaPagamentoDTO;
 import com.algaworks.algafood.api.dto.request.FormaPagamentoRequest;
 import com.algaworks.algafood.api.exceptionHandler.ApiError;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public interface FormaPagamentoOpenApi {
 
     @ApiOperation("Lista as formas de pagamento")
-    public ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request);
+    public ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar(ServletWebRequest request);
 
     @ApiOperation("Busca uma forma de pagamento através do ID")
     @ApiResponses({

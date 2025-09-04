@@ -8,6 +8,7 @@ import com.algaworks.algafood.api.openapi.controller.FormaPagamentoOpenApi;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -36,7 +36,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
     private FormaPagamentoConverter formaPagamentoConverter;
 
     @GetMapping
-    public ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request) {
+    public ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar(ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
 
         var eTag = "0";
@@ -45,7 +45,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
         if (request.checkNotModified(eTag)) return null;
 
         var formasPagamento = formaPagamentoRepository.findAll();
-        var dto = formaPagamentoDTOConverter.toCollectionDTO(formasPagamento);
+        var dto = formaPagamentoDTOConverter.toCollectionModel(formasPagamento);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
                 .eTag(eTag)
@@ -62,7 +62,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
         if (request.checkNotModified(eTag)) return null;
 
         var formaPagamento = cadastroFormaPagamentoService.buscarFormaPagamento(formaPagamentoId);
-        var dto = formaPagamentoDTOConverter.toDTO(formaPagamento);
+        var dto = formaPagamentoDTOConverter.toModel(formaPagamento);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
                 .body(dto);
@@ -71,7 +71,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
     @PostMapping
     public FormaPagamentoDTO adicionar(@RequestBody @Valid FormaPagamentoRequest formaPagamentoRequest) {
         var formaPagamento = formaPagamentoConverter.toDomain(formaPagamentoRequest);
-        return formaPagamentoDTOConverter.toDTO(cadastroFormaPagamentoService.salvar(formaPagamento));
+        return formaPagamentoDTOConverter.toModel(cadastroFormaPagamentoService.salvar(formaPagamento));
     }
 
     @PutMapping("/{formaPagamentoId}")
@@ -79,7 +79,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
                                        @RequestBody @Valid FormaPagamentoRequest formaPagamentoRequest) {
         var formaPagamentoAtual = cadastroFormaPagamentoService.buscarFormaPagamento(formaPagamentoId);
         formaPagamentoConverter.copyToDomain(formaPagamentoRequest, formaPagamentoAtual);
-        return formaPagamentoDTOConverter.toDTO(cadastroFormaPagamentoService.salvar(formaPagamentoAtual));
+        return formaPagamentoDTOConverter.toModel(cadastroFormaPagamentoService.salvar(formaPagamentoAtual));
     }
 
     @DeleteMapping("/{formaPagamentoId}")

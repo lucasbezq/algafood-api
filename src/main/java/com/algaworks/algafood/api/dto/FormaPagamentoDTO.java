@@ -4,9 +4,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 @Getter
 @Setter
+@Relation(collectionRelation = "formas-pagamento")
 public class FormaPagamentoDTO extends RepresentationModel<FormaPagamentoDTO> {
 
     @ApiModelProperty(value = "ID da forma de pagamento", example = "1")

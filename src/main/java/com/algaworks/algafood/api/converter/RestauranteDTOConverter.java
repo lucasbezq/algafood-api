@@ -60,6 +60,16 @@ public class RestauranteDTOConverter extends RepresentationModelAssemblerSupport
                     .withRel("abertura"));
         }
 
+        if (restaurante.isAtivo()) {
+            restauranteDTO.add(linkTo(methodOn(RestauranteController.class)
+                    .inativar(restaurante.getId()))
+                    .withRel("inativacao"));
+        } else {
+            restauranteDTO.add(linkTo(methodOn(RestauranteController.class)
+                    .ativar(restaurante.getId()))
+                    .withRel("ativacao"));
+        }
+
         return restauranteDTO;
     }
 

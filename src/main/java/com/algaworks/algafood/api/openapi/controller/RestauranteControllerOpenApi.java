@@ -44,7 +44,7 @@ public interface RestauranteControllerOpenApi {
             @ApiResponse(code = 204, message = "Restaurante ativado com sucesso."),
             @ApiResponse(code = 404, message = "Restaurante não encontrado.", response = ApiError.class),
     })
-    public void ativar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
+    public ResponseEntity<Void> ativar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
 
     @ApiOperation("Ativa uma lista de restaurantes")
     @ApiResponses({
@@ -58,7 +58,7 @@ public interface RestauranteControllerOpenApi {
             @ApiResponse(code = 204, message = "Restaurante inativado com sucesso."),
             @ApiResponse(code = 404, message = "Restaurante não encontrado.", response = ApiError.class)
     })
-    public void inativar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
+    public ResponseEntity<Void> inativar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
 
     @ApiOperation("Inativa uma lista de restaurantes")
     @ApiResponses({

@@ -111,4 +111,8 @@ public class Restaurante {
         return !isAberto();
     }
 
+    public boolean isAtivo() {
+        return this.ativo;
+    }
+
 }

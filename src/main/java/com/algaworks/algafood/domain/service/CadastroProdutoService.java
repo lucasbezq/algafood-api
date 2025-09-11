@@ -28,4 +28,16 @@ public class CadastroProdutoService {
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(produtoId, restauranteId));
     }
 
+    public void ativar(Long produtoId, Long restauranteId) {
+        var produto = buscarProduto(produtoId, restauranteId);
+        produto.ativar();
+        salvar(produto, produto.getRestaurante().getId());
+    }
+
+    public void inativar(Long produtoId, Long restauranteId) {
+        var produto = buscarProduto(produtoId, restauranteId);
+        produto.inativar();
+        salvar(produto, produto.getRestaurante().getId());
+    }
+
 }

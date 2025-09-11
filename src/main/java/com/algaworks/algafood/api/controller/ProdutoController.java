@@ -16,6 +16,7 @@ import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
 import com.algaworks.algafood.domain.service.FotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,10 +27,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value = "/restaurantes/{restauranteId}/produtos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,22 +57,24 @@ public class ProdutoController implements ProdutoControllerOpenApi {
     private FotoStorageService fotoStorageService;
 
     @GetMapping
-    public List<ProdutoDTO> listar(@PathVariable Long restauranteId) {
+    public CollectionModel<ProdutoDTO> listar(@PathVariable Long restauranteId) {
         var restaurante = cadastroRestauranteService.buscarRestaurante(restauranteId);
-        return produtoDTOConverter.toCollectionDTO(restaurante.getProdutos());
+        var produtosDTO = produtoDTOConverter.toCollectionModel(restaurante.getProdutos());
+
+        return produtosDTO;
     }
 
     @GetMapping("/{produtoId}")
     public ProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         var restaurante = cadastroRestauranteService.buscarRestaurante(restauranteId);
-        return produtoDTOConverter.toDTO(cadastroProdutoService.buscarProduto(produtoId, restaurante.getId()));
+        return produtoDTOConverter.toModel(cadastroProdutoService.buscarProduto(produtoId, restaurante.getId()));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProdutoDTO adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoRequest produtoRequest) {
         var produto = produtoConverter.toDomain(produtoRequest);
-        return produtoDTOConverter.toDTO(cadastroProdutoService.salvar(produto, restauranteId));
+        return produtoDTOConverter.toModel(cadastroProdutoService.salvar(produto, restauranteId));
     }
 
     @PutMapping("/{produtoId}")
@@ -80,7 +82,7 @@ public class ProdutoController implements ProdutoControllerOpenApi {
                                 @RequestBody @Valid ProdutoRequest produtoRequest) {
         var produtoAtual = cadastroProdutoService.buscarProduto(produtoId, restauranteId);
         produtoConverter.copyToDomain(produtoRequest, produtoAtual);
-        return produtoDTOConverter.toDTO(cadastroProdutoService.salvar(produtoAtual, produtoAtual.getRestaurante().getId()));
+        return produtoDTOConverter.toModel(cadastroProdutoService.salvar(produtoAtual, produtoAtual.getRestaurante().getId()));
     }
 
     @PutMapping(path = "/{produtoId}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -141,6 +143,20 @@ public class ProdutoController implements ProdutoControllerOpenApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removerFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         catalogoFotoProdutoService.removerFoto(restauranteId, produtoId);
+    }
+
+    @PutMapping("{produtoId}/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> ativar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+        cadastroProdutoService.ativar(produtoId, restauranteId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{produtoId}/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> inativar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+        cadastroProdutoService.inativar(produtoId, restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
     private void verificarCompatibilidadeMediaType(MediaType mediaTypeFoto, List<MediaType> acceptMediaTypes)

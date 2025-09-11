@@ -5,12 +5,12 @@ import com.algaworks.algafood.api.dto.ProdutoDTO;
 import com.algaworks.algafood.api.dto.request.FotoProdutoRequest;
 import com.algaworks.algafood.api.dto.request.ProdutoRequest;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @Api(tags = "Produtos")
 public interface ProdutoControllerOpenApi {
@@ -19,7 +19,7 @@ public interface ProdutoControllerOpenApi {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Lista de produtos retornada com sucesso.")
     })
-    public List<ProdutoDTO> listar(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId);
+    public CollectionModel<ProdutoDTO> listar(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId);
 
     @ApiOperation(value = "Busca um produto de um restaurante por ID")
     @ApiResponses({
@@ -77,5 +77,23 @@ public interface ProdutoControllerOpenApi {
     })
     public void removerFoto(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId,
                             @ApiParam(value = "ID de um produto", example = "1", required = true) Long produtoId);
+
+    @ApiOperation("Ativa produto de um restaurante")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Produto ativado com sucesso."),
+            @ApiResponse(code = 404, message = "Restaurante não encontrado."),
+            @ApiResponse(code = 400, message = "ID do produto inválido.")
+    })
+    public ResponseEntity<Void> ativar(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId,
+                       @ApiParam(value = "ID do produto", example = "1", required = true) Long produtoId);
+
+    @ApiOperation("Inativa produto de um restaurante")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Produto inativado com sucesso."),
+            @ApiResponse(code = 404, message = "Restaurante não encontrado."),
+            @ApiResponse(code = 400, message = "ID do produto inválidos.")
+    })
+    public ResponseEntity<Void> inativar(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId,
+                       @ApiParam(value = "IDs dos produtos", example = "1", required = true) Long produtoIds);
 
 }

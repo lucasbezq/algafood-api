@@ -34,4 +34,16 @@ public class Produto {
     @JoinColumn(nullable = false)
     private Restaurante restaurante;
 
+    public void ativar() {
+        setAtivo(true);
+    }
+
+    public void inativar() {
+        setAtivo(false);
+    }
+
+    public boolean isAtivo() {
+        return Boolean.TRUE.equals(ativo);
+    }
+
 }

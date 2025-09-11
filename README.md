@@ -11,7 +11,8 @@ A AlgaFood API é uma plataforma de entrega de comida, desenvolvida com as tecno
 ## Tecnologias e Ferramentas Utilizadas
 - Java 11
 - Spring Boot 
-- Spring Data JPA 
+- Spring Data JPA
+- Spring HATEOAS
 - JPA / Hibernate 
 - Maven 
 - Flyway

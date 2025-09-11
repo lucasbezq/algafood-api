@@ -26,17 +26,17 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
     @GetMapping
     public CollectionModel<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
         var restaurante = cadastroRestauranteService.buscarRestaurante(restauranteId);
-        var formasPagamentoDTO = formaPagamentoDTOConverter.toCollectionModel(restaurante.getFormasPagamento(), restauranteId);
+        var formasPagamentoDTO = formaPagamentoDTOConverter.toCollectionModel(restaurante.getFormasPagamento(), restauranteId)
+                .add(linkTo(methodOn(RestauranteFormaPagamentoController.class)
+                        .associar(restauranteId, null))
+                        .withRel("associar"));
 
         formasPagamentoDTO.getContent()
                 .forEach(formaPagamentoDTO -> {
-                    formaPagamentoDTO.add(linkTo(methodOn(RestauranteFormaPagamentoController.class)
-                            .desassociar(restauranteId, formaPagamentoDTO.getId()))
-                            .withRel("desassociar"));
-
-                    formaPagamentoDTO.add(linkTo(methodOn(RestauranteFormaPagamentoController.class)
-                            .associar(restauranteId, formaPagamentoDTO.getId()))
-                            .withRel("associar"));
+                    formaPagamentoDTO
+                            .add(linkTo(methodOn(RestauranteFormaPagamentoController.class)
+                                    .desassociar(restauranteId, formaPagamentoDTO.getId()))
+                                    .withRel("desassociar"));
                 });
 
         return formasPagamentoDTO;

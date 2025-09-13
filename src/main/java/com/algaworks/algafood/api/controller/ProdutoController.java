@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/restaurantes/{restauranteId}/produtos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,6 +61,17 @@ public class ProdutoController implements ProdutoControllerOpenApi {
     public CollectionModel<ProdutoDTO> listar(@PathVariable Long restauranteId) {
         var restaurante = cadastroRestauranteService.buscarRestaurante(restauranteId);
         var produtosDTO = produtoDTOConverter.toCollectionModel(restaurante.getProdutos());
+
+        produtosDTO.forEach(produtoDTO -> {
+            produtoDTO.removeLinks();
+            produtoDTO.add(linkTo(methodOn(ProdutoController.class)
+                    .buscar(restauranteId, produtoDTO.getId()))
+                    .withSelfRel());
+        });
+
+        produtosDTO.add(linkTo(methodOn(ProdutoController.class)
+                .listar(restauranteId))
+                .withSelfRel());
 
         return produtosDTO;
     }

@@ -42,6 +42,10 @@ public class ProdutoDTOConverter extends RepresentationModelAssemblerSupport<Pro
                 .listar(produto.getRestaurante().getId()))
                 .withRel("produtos"));
 
+        produtoDTO.add(linkTo(methodOn(ProdutoController.class)
+                .buscarFoto(produto.getRestaurante().getId(), produto.getId()))
+                .withRel("foto"));
+
         return produtoDTO;
     }
 

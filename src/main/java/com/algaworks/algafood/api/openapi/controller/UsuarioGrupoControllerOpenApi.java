@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.openapi.controller;
 
 import com.algaworks.algafood.api.dto.GrupoDTO;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ public interface UsuarioGrupoControllerOpenApi {
             @ApiResponse(code = 200, message = "Lista de grupos retornada com sucesso"),
             @ApiResponse(code = 404, message = "Usuário não encontrado")
     })
-    public List<GrupoDTO> listar(@ApiParam(value = "ID de um usuário", example = "1", required = true) Long usuarioId);
+    public CollectionModel<GrupoDTO> listar(@ApiParam(value = "ID de um usuário", example = "1", required = true) Long usuarioId);
 
     @ApiOperation("Associa um grupo a um usuário")
     @ApiResponses({

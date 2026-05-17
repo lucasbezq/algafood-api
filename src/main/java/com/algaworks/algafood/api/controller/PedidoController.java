@@ -80,7 +80,8 @@ public class PedidoController implements PedidoControllerOpenApi {
             novoPedido = emissaoPedidoService.emitir(novoPedido);
             return pedidoDTOConverter.toModel(novoPedido);
         } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage(), e);
+            throw new NegocioException(e.getMessage
+                    (), e);
         }
     }
 

@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.dto.GrupoDTO;
 import com.algaworks.algafood.api.dto.request.GrupoRequest;
 import com.algaworks.algafood.api.exceptionHandler.ApiError;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface GrupoControllerOpenApi {
 
     @ApiOperation("Lista os grupos")
-    public List<GrupoDTO> listar();
+    public CollectionModel<GrupoDTO> listar();
 
     @ApiOperation("Busca uma grupo através do ID")
     @ApiResponses({

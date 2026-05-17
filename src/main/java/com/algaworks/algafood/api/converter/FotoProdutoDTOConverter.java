@@ -1,24 +1,34 @@
 package com.algaworks.algafood.api.converter;
 
-import com.algaworks.algafood.api.dto.CidadeDTO;
+import com.algaworks.algafood.api.controller.ProdutoController;
 import com.algaworks.algafood.api.dto.FotoProdutoDTO;
-import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.FotoProduto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class FotoProdutoDTOConverter {
+public class FotoProdutoDTOConverter extends RepresentationModelAssemblerSupport<FotoProduto, FotoProdutoDTO> {
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public FotoProdutoDTO toDTO(FotoProduto foto) {
-        return modelMapper.map(foto, FotoProdutoDTO.class);
+    public FotoProdutoDTOConverter() {
+        super(FotoProduto.class, FotoProdutoDTO.class);
+    }
+
+    public FotoProdutoDTO toModel(FotoProduto foto) {
+        var fotoProdutoDTO =  modelMapper.map(foto, FotoProdutoDTO.class);
+
+        fotoProdutoDTO.add(linkTo(methodOn(ProdutoController.class)
+                .buscarFoto(foto.getRestauranteId(), foto.getProduto().getId()))
+                .withSelfRel());
+
+        return fotoProdutoDTO;
     }
 
 }

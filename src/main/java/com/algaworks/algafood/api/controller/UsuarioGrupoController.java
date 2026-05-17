@@ -5,11 +5,13 @@ import com.algaworks.algafood.api.dto.GrupoDTO;
 import com.algaworks.algafood.api.openapi.controller.UsuarioGrupoControllerOpenApi;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(path = "/usuarios/{usuarioId}/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -22,10 +24,37 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
     private GrupoDTOConverter grupoDTOConverter;
 
     @GetMapping
-    public List<GrupoDTO> listar(@PathVariable Long usuarioId) {
+    public CollectionModel<GrupoDTO> listar(@PathVariable Long usuarioId) {
         var usuario = cadastroUsuarioService.buscarUsuario(usuarioId);
         var grupos = usuario.getGrupos();
-        return grupoDTOConverter.toCollectionDTO(grupos);
+        var gruposDTO = grupoDTOConverter.toCollectionModel(grupos);
+
+        gruposDTO.forEach(grupoDTO -> {
+            grupoDTO.removeLinks();
+
+            grupoDTO.add(
+                    linkTo(methodOn(GrupoController.class)
+                            .buscar(grupoDTO.getId()))
+                            .withSelfRel()
+            );
+
+            grupoDTO.add(
+                    linkTo(methodOn(GrupoController.class)
+                            .listar())
+                            .withRel("grupos")
+            );
+
+            grupoDTO.add(
+                    linkTo(methodOn(GrupoPermissaoController.class)
+                            .listar(grupoDTO.getId()))
+                            .withRel("permissoes")
+            );
+        });
+
+
+
+
+        return gruposDTO;
     }
 
     @PutMapping("/{grupoId}")

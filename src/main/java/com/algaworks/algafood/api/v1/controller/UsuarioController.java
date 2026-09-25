@@ -1,0 +1,75 @@
+package com.algaworks.algafood.api.v1.controller;
+
+import com.algaworks.algafood.api.v1.converter.UsuarioConverter;
+import com.algaworks.algafood.api.v1.converter.UsuarioDTOConverter;
+import com.algaworks.algafood.api.v1.dto.UsuarioDTO;
+import com.algaworks.algafood.api.v1.dto.request.UsuarioAtualizacaoRequest;
+import com.algaworks.algafood.api.v1.dto.request.UsuarioRequest;
+import com.algaworks.algafood.api.v1.dto.request.UsuarioSenhaRequest;
+import com.algaworks.algafood.api.v1.openapi.controller.UsuarioControllerOpenApi;
+import com.algaworks.algafood.domain.exception.NegocioException;
+import com.algaworks.algafood.domain.exception.UsuarioNaoEncontradoException;
+import com.algaworks.algafood.domain.repository.UsuarioRepository;
+import com.algaworks.algafood.domain.service.CadastroUsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+@RestController
+@RequestMapping(value = "/v1/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UsuarioController implements UsuarioControllerOpenApi {
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private UsuarioDTOConverter usuarioDTOConverter;
+
+    @Autowired
+    private UsuarioConverter usuarioConverter;
+
+    @Autowired
+    private CadastroUsuarioService cadastroUsuarioService;
+
+    @GetMapping
+    public CollectionModel<UsuarioDTO> listar() {
+        var usuarios = usuarioRepository.findAll();
+        return usuarioDTOConverter.toCollectionModel(usuarios);
+    }
+
+    @GetMapping("/{usuarioId}")
+    public UsuarioDTO buscar(@PathVariable Long usuarioId) {
+        var usuario =  cadastroUsuarioService.buscarUsuario(usuarioId);
+        return usuarioDTOConverter.toModel(usuario);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UsuarioDTO adicionar(@RequestBody @Valid UsuarioRequest usuarioRequest) {
+        var usuario = usuarioConverter.toDomain(usuarioRequest);
+        return usuarioDTOConverter.toModel(cadastroUsuarioService.salvar(usuario));
+    }
+
+    @PutMapping("/{usuarioId}")
+    public UsuarioDTO atualizar(@PathVariable Long usuarioId,
+                                @RequestBody @Valid UsuarioAtualizacaoRequest usuarioAtualizacaoRequest) {
+        try {
+            var usuarioAtual = cadastroUsuarioService.buscarUsuario(usuarioId);
+            usuarioConverter.copyToDomain(usuarioAtualizacaoRequest, usuarioAtual);
+            return usuarioDTOConverter.toModel(cadastroUsuarioService.salvar(usuarioAtual));
+        } catch (UsuarioNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{usuarioId}/senha")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void atualizarSenha(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioSenhaRequest usuarioSenhaRequest) {
+        cadastroUsuarioService.alterarSenha(usuarioId, usuarioSenhaRequest.getSenhaAtual(), usuarioSenhaRequest.getNovaSenha());
+    }
+
+}

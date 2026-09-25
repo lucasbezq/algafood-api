@@ -1,11 +1,11 @@
 package com.algaworks.algafood.core.springfox;
 
-import com.algaworks.algafood.api.dto.CozinhaDTO;
-import com.algaworks.algafood.api.dto.PedidoResumoDTO;
+import com.algaworks.algafood.api.v1.dto.CozinhaDTO;
+import com.algaworks.algafood.api.v1.dto.PedidoResumoDTO;
 import com.algaworks.algafood.api.exceptionHandler.ApiError;
-import com.algaworks.algafood.api.openapi.model.CozinhasModelOpenApi;
-import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
-import com.algaworks.algafood.api.openapi.model.PedidosModelOpenApi;
+import com.algaworks.algafood.api.v1.openapi.model.CozinhasModelOpenApi;
+import com.algaworks.algafood.api.v1.openapi.model.PageableModelOpenApi;
+import com.algaworks.algafood.api.v1.openapi.model.PedidosModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
